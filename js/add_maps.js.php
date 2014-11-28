@@ -97,6 +97,7 @@ addMap({
 	],
 	music: "come-on-in-to-post-town.mp3",
 	items: [],
+	firstAct: "1",
 	acts: [
 	
 		{
@@ -135,6 +136,8 @@ addMap({
 		{
 			
 			organise: function(){
+				
+				$maps.players_room.act = 0;
 				
 				displayText(["Zzz...", "Zzzzz...", "Zzz...", "Zzzzzzzzzzzzz!", "What time is it?", "...", "!!!"], function(){
 					
