@@ -141,7 +141,7 @@ Q.component("playerFunctions", {
 		
 		// Make bump sound!
 		
-		p.serious_bumps = 0; // Bumps against Persons/Items play 3 times but shouldn't. Let's prevent it by counting!
+		p.seriousBumps = 0; // Bumps against Persons/Items play 3 times but shouldn't. Let's prevent it by counting!
 		
 		this.entity.on("hit", this, "bumpSound");
 		
@@ -160,15 +160,15 @@ Q.component("playerFunctions", {
 		var obj = collision.obj;
 		
 		// Bumps against Persons/Items play 3 times but shouldn't. Let's prevent it by counting!
-		if (obj.isA("Item") || obj.isA("Person")){
+		if ( obj.isA("Person") || obj.isA("Item") ){
 			
 			var p = this.entity.p;
 			
-			p.serious_bumps++; // Counts hits on Persons/Items because 
+			p.seriousBumps++; // Counts hits on Persons/Item 
 			
-			if (p.serious_bumps >= 3){
+			if (p.seriousBumps >= 3){
 			
-				p.serious_bumps = 0;
+				p.seriousBumps = 0;
 				// The third hit should create a sound, thus no return statement!
 				
 			} else {

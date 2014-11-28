@@ -1,12 +1,12 @@
 // Handle live user settings
 
-document.getElementById("audio_enabled").checked = $audio_enabled;
+document.getElementById("audioEnabled").checked = $audioEnabled;
 
-document.getElementById("audio_enabled").onclick = function(){
+document.getElementById("audioEnabled").onclick = function(){
 	
-	 $audio_enabled = document.getElementById("audio_enabled").checked;
+	 $audioEnabled = document.getElementById("audioEnabled").checked;
 	 
-	 handle_music();
+	 handleMusic();
 	 
 	 document.getElementById("canvas").focus();
 	
