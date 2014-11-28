@@ -3,7 +3,7 @@ zuk
 
 This is supposed to become a service which allows users to create pokemon-like games out of their tmx-maps.
 
-Audio files: Copyright held by The Pokémon Company
+Audio files, image files: Copyright held by The Pokémon Company
   
 Quintus Game Engine<br/>
 (c) 2012 Pascal Rettig, Cykod LLC<br/>
