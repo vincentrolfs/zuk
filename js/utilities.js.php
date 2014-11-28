@@ -35,6 +35,7 @@ function handle_music(new_music){
 
 	Q.audio.stop();
 	
+	// new_music was just empty string - just stop music.
 	if (!$music) return;
 		
 	Q.load($music, function(){

@@ -16,7 +16,7 @@ addMap({
 	
 	],
 	music: "come-on-in-to-post-town.mp3",
-	items: [],
+	items: [{ x: 168, y: 88, no: 1 }],
 	persons: [{
 	
 		x: 216, 

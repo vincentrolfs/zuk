@@ -197,10 +197,10 @@ Q.component("playerFunctions", {
 		// 			inverted direction
 		var places = { 
 		
-				"up": 		[p.x + p.cx, 		p.y + p.cy - 16, 	"down"	],
-				"down": 	[p.x + p.cx, 		p.y + p.cy + 16, 	"up"	],
-				"left": 	[p.x + p.cx - 16, 	p.y + p.cy, 		"right"	],
-				"right": 	[p.x + p.cx + 16, 	p.y + p.cy,			"left"	]
+				"up": 		[p.x, 		p.y + p.cy - 16, 	"down"	],
+				"down": 	[p.x, 		p.y + p.cy + 16, 	"up"	],
+				"left": 	[p.x - 16, 	p.y + p.cy, 		"right"	],
+				"right": 	[p.x + 16, 	p.y + p.cy,			"left"	]
 		
 			},
 			spot = places[p.direction], // The actual spot the player is looking at
@@ -208,12 +208,16 @@ Q.component("playerFunctions", {
 			i = 0,
 			l = actionSprites.length,
 			sprite;
+		
+		var s = actionSprites[3];
+		
+		//console.log( p.x  - 16, s.p.x );
 			
 		for ( ; i < l; i++){ // Loop through actionSprites
 			
 			sprite = actionSprites[i];
 		
-			if ( (sprite.p.x + sprite.p.cx) == spot[0] && (sprite.p.y + sprite.p.cy) == spot[1]){ // If the sprite is on the spot the player is looking at
+			if ( (sprite.p.x) == spot[0] && (sprite.p.y + sprite.p.cy) == spot[1]){ // If the sprite is on the spot the player is looking at
 				
 				if (!$ui_busy){
 					
@@ -225,7 +229,7 @@ Q.component("playerFunctions", {
 					}
 						
 					// Interact with sprite; call the interact function so that "this" symbolizes the sprite
-					sprite.p.interact.call(sprite, {ensure: sprite.render});
+					sprite.p.interact.call(sprite);
 					
 				}
 			

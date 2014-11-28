@@ -140,27 +140,32 @@ Q.Sprite.extend("Item", {
 		
 			x: 8,
 			y: 8,
-			sheet: "main_sheet",
-			frame: 334,
+			asset: "item.png",
 			no: 1, // What item is it? Pokeball etc
 			id_on_map: 0, // Identifies item on the map to be able to delete it
 			interact: function(){
 				
-				var p = this.p,
+				var item = this,
+					p = this.p,
 					no = this.p.no;
 			
-				displayText(["Player found " + $itemNames[no] + "!"]);
+				displayText(["Player found " + $itemNames[no] + "!"], function(){
+					
+					// Increase quantity in hold by one
+					if (typeof $state.items[no] == "number"){ 
+						
+							$state.items[no]++; // If player already holds one, just increase
+						
+					} else 	$state.items[no] = 1; // Else set to one
+					
+					// So that item doesn't reappear!
+					$maps[ p.mapName ].items.splice( p.id_on_map, 1 );
+					
+					item.destroy();	
+						
+				});
 				
 				Q.audio.play("item_found.mp3");
-				
-				// Increase quantity in hold by one
-				if (typeof $state.items[no] == "number") $state.items[no]++; // If player already holds one, just increase
-				else $state.items[no] = 1; // Else set to one
-				
-				// So that item doesn't reappear!
-				$maps[ p.mapName ].items.splice( p.id_on_map, 1 );
-				
-				this.destroy();
 				
 			}
 	
