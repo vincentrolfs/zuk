@@ -1,6 +1,7 @@
 // Global varibales start with $
 var $audioEnabled = window.location.search.indexOf("quiet") == -1, // String "quiet" can not be found in parameters? => audio enabled
 	$music = "", // Current song of map
+	
 	$state = {
 		
 		items: {},
@@ -12,8 +13,10 @@ var $audioEnabled = window.location.search.indexOf("quiet") == -1, // String "qu
 		"1": "Pokeball"
 	
 	},
+	
 	$activeMap = "",
 	$maps = {},
+	
 	$ui_textContainer, // Container for displayed text
 	$ui_text, // Displayed text itself
 	$ui_busy = false;
@@ -75,7 +78,7 @@ function displayText(txtArr, callback){
 	
 	// ----- start freezing
 	
-	var persons = $maps[$activeMap].persons;
+	var persons = $maps[$activeMap].p.persons;
 	
 	persons.push($player);
 		
@@ -157,227 +160,31 @@ function addMap(data)
 	data = {
 	
 		mapName: "",
-		fileName: "", 		--opt
-		loadingPoints: {},	--opt if no file name
-		switchPoints: [],	--opt
-		items: [], 			--opt
-		persons: [], 		--opt
-		music: "",			--opt
-		firstAct: "",		--opt
-		acts: { 			--opt
-			
-			name: { persons: [], organise: function(){} }
-			
-		} 			
-	
+		fileName: "", 								//--opt (blackmap if not provided)
+		
+		loadingPoints:  { default: [0, 0] },		//--opt if blackmap
+		switchPoints: [],							//--opt
+		
+		items: [], 									//--opt
+		persons: [], 								//--opt
+		music: "",									//--opt
+		
+		firstAct: "0",								//--opt
+		acts: [										//--opt, can be hash
+		
+			{ persons: [], organise: function(){} } // --opt (both)
+		
+		], 								
+		
+		loadAssetsOf: []							//--opt (signifies for which maps this one should also preload the assets)
+
 	}
 */
 
 function addMap(mapData){
 	
-	var myAssets = []; // The stuff nearby maps load
+	if (!mapData.mapName) throw "No map name provided!";
 	
-	if (mapData.music) myAssets.push( mapData.music );
-	if (mapData.fileName) myAssets.push( mapData.fileName );
+	$maps[mapData.mapName] = new Q.Map(mapData);
 	
-	// Initialize events object for this map
-	$maps[mapData.mapName] = {
-	
-		items: mapData.items || [], // The items that are still on this map
-		persons: [],
-		act: mapData.firstAct || "0",
-		
-		assets: myAssets, // So that other maps know what files this one uses & can load them beforehand
-		visited: false
-	
-	};
-	
-	if (!mapData.switchPoints) mapData.switchPoints = [];
-	if (!mapData.loadingPoints) mapData.loadingPoints = { default: [0, 0] };
-	
-	// Create scene with proper name
-	Q.scene(mapData.mapName, function(stage) {
-		
-		// stage contains the actual visible stuff, thus you can do stage.insert
-		
-		$activeMap = mapData.mapName;
-		
-		$maps[mapData.mapName].visited = true;
-		
-		var currentAct = $maps[mapData.mapName].act,
-			comingFrom,
-			oldDirection,
-			loadX,
-			loadY,
-			direction;
-		
-		// ----- Start player config
-		
-		if ($player){
-		
-			comingFrom = $player.getMap();
-			oldDirection = $player.getDirection();
-				
-			// If the location where player comes from doesn't have it's own loading point
-			if (typeof mapData.loadingPoints[comingFrom] == "undefined"){
-				
-				// Use default loading point
-				comingFrom = "default";
-				
-			}
-			
-		} else { // No player there yet
-		
-			comingFrom = "default";	
-			
-		}
-		
-		loadX = mapData.loadingPoints[comingFrom][0];
-		loadY = mapData.loadingPoints[comingFrom][1];
-		
-		direction = mapData.loadingPoints[comingFrom][2] || oldDirection || "down";
-		
-		// Make changes to the player instance
-		var playerConfig = {
-			
-			hasMoved: false,
-		
-			x: loadX,
-			y: loadY,
-			
-			startingX: loadX,
-			startingY: loadY,
-			
-			direction: 	direction,
-			
-			mapName: mapData.mapName,
-			
-			switchPoints: mapData.switchPoints
-			// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
-		
-		};
-		
-		if (!$player) $player = new Q.Person(playerConfig, true);
-		
-		else $player.set(playerConfig);
-		
-		// ----- End player config
-		
-		// ----- Start organising act
-		
-		function organiseAct(){
-		
-			if (mapData.acts && mapData.acts[currentAct] && (typeof mapData.acts[currentAct].organise === "function")){
-				
-				mapData.acts[currentAct].organise();
-				
-			}
-			
-		}
-		
-		// ----- End organising act
-		
-		// ----- Start map creation
-		
-		if (!mapData.fileName){
-			
-			Q.stageScene("blackmap", 1);
-			
-			organiseAct();
-			
-		} else {
-		
-			// Load tmx file
-			Q.load(mapData.fileName, function(){
-		
-				// Display tmx map
-				Q.stageTMX(mapData.fileName, stage);
-				
-				stage.insert($player);
-				
-				// Camera follows player
-				stage.add("viewport").follow($player);
-				
-				// ----- Start items inserting
-				
-				var i = 0,
-					items = $maps[mapData.mapName].items, // The items that are still on this map
-					l = items.length;
-					
-				for ( ; i < l; i++ ){
-					
-					stage.insert(new Q.Item( items[i], i ) );
-					
-				}
-				
-				// ----- End items inserting
-				
-				// ----- Start persons inserting
-				
-				var persons = mapData.persons || []; // Persons that appear no matter what act it is
-				
-				// If current act exists & provides special persons
-				if (mapData.acts && mapData.acts[currentAct] && mapData.acts[currentAct].persons){
-					
-					// Add persons of this act to the array
-					persons = persons.concat( mapData.acts[currentAct].persons );
-					
-				}
-					
-				var persons_length = persons.length,
-					i = 0;
-					
-				for ( ; i < persons_length; i++ ){
-					
-					$maps[mapData.mapName].persons.push( stage.insert( new Q.Person( persons[i]) ) );
-					
-				}
-				
-				// ----- End persons inserting
-				
-				organiseAct();
-				
-			});
-			
-		}
-		
-		// ----- End map creation
-		
-		// Put on music
-		handleMusic( mapData.music );
-		
-		// ----- Start loading of nearby maps' asses
-		
-		// Go through reachable maps and load their assets!
-		var reachables = mapData.switchPoints,
-			i = 0,
-			l = reachables.length,
-			loadArray = mapData.preload || [], // Some maps have other stuff they want to preload
-			mapName;
-		
-		// Go through reachable maps...
-		for ( ; i < l; i++){
-			
-			mapName = reachables[i][2];
-			
-			// If map has not been visited yet
-			if ( !$maps[ mapName ].visited ){
-			
-				loadArray = loadArray.concat( $maps[ mapName ].assets );
-				
-			}
-			
-		}
-		
-		Q.load(loadArray);
-		
-		// ----- End loading of nearby maps' data
-	
-	}, { // Options for scene
-		
-		// Sort things on stage (persons etc) by y-values (height)
-		sort: function(a,b) { return ((a.p && a.p.y) || -1) - ((b.p && b.p.y) || -1) }
-		
-	});
-
 }
