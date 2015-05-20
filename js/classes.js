@@ -1,4 +1,4 @@
-// Create class Map
+// Class Map
 Q.Class.extend("Map", {
 	
 	init: function(settings){
@@ -16,7 +16,7 @@ Q.Class.extend("Map", {
 			persons: [], 							//--opt
 			music: "",								//--opt
 			
-			firstAct: "0",							//--opt
+			firstAct: 0,							//--opt
 			acts: [], 								//--opt, can be hash
 			
 			loadAssetsOf: []						//--opt [for which maps this one should also preload]
@@ -30,7 +30,7 @@ Q.Class.extend("Map", {
 		this.p = {
 			
 			items: s.items, // The items that are still on this map
-			persons: [],				// The persons that are on this map
+			persons: [],	// The persons that are on this map
 			act: s.firstAct,
 			
 			assets: [], // So that other maps know what files this one uses & can load them beforehand
@@ -38,13 +38,12 @@ Q.Class.extend("Map", {
 			
 		};
 		
-		// Dollar sign signifies other classes will change these properties
-		var $p = this.p;
+		// Faster access
+		var p = this.p;
 	
 		// p.assets: the stuff nearby maps load for this map
-		if (s.music) 	$p.assets.push( s.music );
-		if (s.fileName) $p.assets.push( s.fileName );
-
+		if (s.music) 	p.assets.push( s.music );
+		if (s.fileName) p.assets.push( s.fileName );
 		// Create scene with proper name
 		Q.scene(s.mapName, function(stage) {
 			
@@ -52,9 +51,9 @@ Q.Class.extend("Map", {
 			
 			$activeMap = s.mapName;
 			
-			$p.visited = true;
+			p.visited = true;
 			
-			var currentAct = $p.act,
+			var currentAct = p.act,
 				comingFrom,
 				oldDirection,
 				loadX,
@@ -152,7 +151,7 @@ Q.Class.extend("Map", {
 					// ----- Start items inserting
 					
 					var i = 0,
-						items = $p.items, // The items that are still on this map
+						items = p.items, // The items that are still on this map
 						l = items.length;
 						
 					for ( ; i < l; i++ ){
@@ -181,7 +180,7 @@ Q.Class.extend("Map", {
 					// Go through persons, display them and put their instances in propeties
 					for ( ; i < l; i++ ){
 						
-						$p.persons.push( stage.insert( new Q.Person( persons[i]) ) );
+						p.persons.push( stage.insert( new Q.Person( persons[i]) ) );
 						
 					}
 					
@@ -217,10 +216,10 @@ Q.Class.extend("Map", {
 				if (typeof mapName !== "string") mapName = mapName[2];
 				
 				// If map has not been visited yet
-				if ( !$p.visited ){
+				if ( !p.visited ){
 				
 					// Preload it's assets
-					loadArray = loadArray.concat( $p.assets );
+					loadArray = loadArray.concat( p.assets );
 					
 				}
 				
@@ -241,23 +240,21 @@ Q.Class.extend("Map", {
 	
 });
 
-// Create class Person
+// Class Person
 Q.Sprite.extend("Person", {
 
 	init: function(p, isPlayer) {
 	
-		this._super(p, {
+		this._super(p, { // default options
 		
 			x: 8, // Starting position
 			y: 0,
-			sheet: "dp_persons_sheet", // Tilesheet used
-			sprite: "dp_persons_anim", // Animations used
+			sheet: "person_sheet_old_man", // Tilesheet used
+			sprite: "person_animations", // Animations used
 			
 			points: [  [ -8, 0 ], [  8, 0 ], [  8,  16 ], [ -8,  16 ] ],
 			
 			direction: "down", // Starting direction
-			
-			personNumber: 1, // Which person?
 			
 			walk: false, // Random walking
 			walkRadius: 16,
@@ -341,7 +338,7 @@ Q.Sprite.extend("Person", {
 			
 			this.on("step", function(){
 				
-				if ( !p.go_array.length ){
+				if ( p.go_array.length === 0 ){
 				
 					callback();
 					_super.off("step", this);
@@ -374,7 +371,7 @@ Q.Sprite.extend("Person", {
 
 });
 
-// Create class Item
+// Class Item
 Q.Sprite.extend("Item", {
 
 	init: function(p, id_on_map) {

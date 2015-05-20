@@ -48,7 +48,7 @@ Q.component("smartControls", {
 		
 		} else if (p.freeze){ // If player is not currently stepping and is set on freeze, stop him
 		
-			this.entity.play("stand_" + p.direction + p.personNumber);
+			this.entity.play("stand_" + p.direction);
 			return;
 		
 		}
@@ -104,12 +104,11 @@ Q.component("smartControls", {
 			p.stepWait = p.stepDelay;
 			
 			// If person is walking player proper animation
-			// Add personNumber at the end
-			this.entity.play("walk_" + p.direction + p.personNumber);
+			this.entity.play("walk_" + p.direction);
 		
 		} else { // Person is currently standing
 		
-			this.entity.play("stand_" + p.direction + p.personNumber);
+			this.entity.play("stand_" + p.direction);
 		
 		}
 
@@ -123,11 +122,8 @@ Q.component("playerFunctions", {
 	added: function() {
 	  
 		var p = this.entity.p;
-
 		// Activity user controls (see step function of smartControls)
 		p.userControlledStepping = true;
-		
-		p.personNumber = 102;
 		
 		// Points where to switch maps
 		// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
@@ -290,9 +286,9 @@ Q.component("playerFunctions", {
 	
 	checkSwitchPoints: function(){
 	
-		var p = this.entity.p;
+		if (this.entity.p.stepping) return; // abort if player is moving
 	
-		if (p.stepping) return; // abort if player is moving
+		var p = this.entity.p;
 		
 		// Check if player has moved since he arrived on the map
 		if (
