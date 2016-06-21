@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="13" height="12" tilewidth="16" tileheight="16">
- <tileset firstgid="1" name="interior" tilewidth="16" tileheight="16">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="13" height="12" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="interior" tilewidth="16" tileheight="16" tilecount="2496">
   <image source="../images/interior.png" width="128" height="5000"/>
  </tileset>
  <layer name="Bottom 1" width="13" height="12">

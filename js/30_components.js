@@ -15,6 +15,8 @@ Q.component("smartControls", {
 		p.origX = p.x;
 		p.origY = p.y;
 		
+		p.justStartedStepping = false;
+		
 		this.entity.on("step", this, "step");
 		this.entity.on("hit", this, "collision");
 	
@@ -39,6 +41,7 @@ Q.component("smartControls", {
 		
 		var p = this.entity.p;
 		
+		p.justStartedStepping = false;
 		p.stepWait -= dt;
 
 		if (p.stepping) { // Move the player 
@@ -59,10 +62,10 @@ Q.component("smartControls", {
 		
 			p.x = p.destX;
 			p.y = p.destY;
+			
+			p.stepping = false;
 		
 		}
-		
-		p.stepping = false;
 		
 		p.origX = p.x;
 		p.origY = p.y;
@@ -70,29 +73,31 @@ Q.component("smartControls", {
 		p.diffX = 0;
 		p.diffY = 0;
 		
-		if (p.userControlledStepping && Q.inputs['left'] || p.go_array[0] == 'left') {
+		var go_array_empty = (p.go_array.length == 0);
 		
-			p.diffX = -p.stepDistance;
-			p.direction = "left";
-			if (p.go_array.length) p.go_array.splice(0, 1);
-		
-		} else if (p.userControlledStepping && Q.inputs['right'] || p.go_array[0] == 'right') {
-		
-			p.diffX = p.stepDistance;
-			p.direction = "right";
-			if (p.go_array.length) p.go_array.splice(0, 1);
-		
-		} else if (p.userControlledStepping && Q.inputs['up'] || p.go_array[0] == 'up') {
+		if (go_array_empty && p.userControlledStepping && Q.inputs['up'] || p.go_array[0] == 'up') {
 		
 			p.diffY = -p.stepDistance;
 			p.direction = "up";
-			if (p.go_array.length) p.go_array.splice(0, 1);
+			if (!go_array_empty) p.go_array.splice(0, 1);
 		
-		} else if (p.userControlledStepping && Q.inputs['down'] || p.go_array[0] == 'down') {
+		} else if (go_array_empty && p.userControlledStepping && Q.inputs['down'] || p.go_array[0] == 'down') {
 		
 			p.diffY = p.stepDistance;
 			p.direction = "down";
-			if (p.go_array.length) p.go_array.splice(0, 1);
+			if (!go_array_empty) p.go_array.splice(0, 1);
+		
+		} else if (go_array_empty && p.userControlledStepping && Q.inputs['left'] || p.go_array[0] == 'left') {
+		
+			p.diffX = -p.stepDistance;
+			p.direction = "left";
+			if (!go_array_empty) p.go_array.splice(0, 1);
+		
+		} else if (go_array_empty && p.userControlledStepping && Q.inputs['right'] || p.go_array[0] == 'right') {
+		
+			p.diffX = p.stepDistance;
+			p.direction = "right";
+			if (!go_array_empty) p.go_array.splice(0, 1);
 		
 		}
 
@@ -103,7 +108,9 @@ Q.component("smartControls", {
 			p.destY = p.y + p.diffY;
 			p.stepWait = p.stepDelay;
 			
-			// If person is walking player proper animation
+			p.justStartedStepping = true;
+			
+			// If person is walking play proper animation
 			this.entity.play("walk_" + p.direction);
 		
 		} else { // Person is currently standing
@@ -122,12 +129,9 @@ Q.component("playerFunctions", {
 	added: function() {
 	  
 		var p = this.entity.p;
+		
 		// Activity user controls (see step function of smartControls)
 		p.userControlledStepping = true;
-		
-		// Points where to switch maps
-		// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
-		if (!p.switchPoints) { p.switchPoints = []; }
 		
 		if (!p.mapName) { p.mapName = ""; } // Map on which the player is on
 		if (!p.hasMoved) { p.hasMoved = false; } // Has the player moved since arrival/map loading
@@ -143,11 +147,6 @@ Q.component("playerFunctions", {
 		
 		// check action (talking, items) everytime player presses action key
 		Q.input.on("action", this, "checkAction");
-		
-		/*Q.input.on("up", this, "checkSwitchPointsDoors");
-		Q.input.on("down", this, "checkSwitchPointsDoors");
-		Q.input.on("left", this, "checkSwitchPointsDoors");
-		Q.input.on("right", this, "checkSwitchPointsDoors");*/
 
 	},
 	
@@ -160,22 +159,20 @@ Q.component("playerFunctions", {
 			
 			var p = this.entity.p;
 			
-			p.seriousBumps++; // Counts hits on Persons/Item 
+			if (p.seriousBumps < 3){
 			
-			if (p.seriousBumps >= 3){
+				return;
+			
+			} else {
 			
 				p.seriousBumps = 0;
 				// The third hit should create a sound, thus no return statement!
-				
-			} else {
-			
-				return; // End function execution and don't play sound!	
 				
 			}
 		
 		}
 		
-		Q.audio.play("bump.mp3");
+		playSound(SOUNDFILE_BUMP);
 		
 	},
 	
@@ -200,19 +197,15 @@ Q.component("playerFunctions", {
 		
 			},
 			spot = places[p.direction], // The actual spot the player is looking at
-			actionSprites = Q("Person", 1).items.concat( Q("Item", 1).items ), // All the sprites the player can interact with (persons+items)
+			actionSprites = getActionSprites(), // All the sprites the player can interact with
 			i = 0,
 			l = actionSprites.length,
 			sprite;
 		
-		var s = actionSprites[3];
-		
-		//console.log( p.x  - 16, s.p.x );
-			
 		for ( ; i < l; i++){ // Loop through actionSprites
 			
 			sprite = actionSprites[i];
-		
+			
 			if ( (sprite.p.x) == spot[0] && (sprite.p.y + sprite.p.cy) == spot[1]){ // If the sprite is on the spot the player is looking at
 				
 				if (!$ui_busy){
@@ -235,58 +228,9 @@ Q.component("playerFunctions", {
 	
 	},
 	
-	/*checkSwitchPointsDoors: function(info){
-		
-		var p = this.entity.p,
-			places = { 
-	
-				"up": 		[p.x, 		p.y - 16],
-				"down": 	[p.x, 		p.y + 16],
-				"left": 	[p.x - 16, 	p.y],
-				"right": 	[p.x + 16, 	p.y]
-	
-			},
-			possible_dir,
-			dir;
-		
-		// Find out in what direction the player is going
-		for (possible_dir in places){
-			
-			if (Q.inputs[possible_dir]){
-				
-				dir = possible_dir;
-				break;
-				
-			}
-			
-		}
-		
-		// When player is moving steadily, event is fired in between => correct the numbers
-		var destX = Math.round( ( p.x - 8  )/16 ) * 16 + 8,
-			destY = Math.round( ( p.y - 16 )/16 ) * 16;
-		
-		var i = 0,
-			l = p.switchPoints.length;
-			
-		for ( i = 0; i < l; i++){
-			
-			if ( !p.switchPoints[i][3] ) continue; // If type is undefined or zero, it's not a switch point for a door!
-			
-			if (destX == p.switchPoints[i][0] && destY == p.switchPoints[i][1]){
-				
-				//mapSwitch(p.switchPoints[i][2]);
-			
-				
-				
-			}
-			
-		}
-		
-	},*/
-	
 	checkSwitchPoints: function(){
 	
-		if (this.entity.p.stepping) return; // abort if player is moving
+		if (this.entity.p.stepping && !this.entity.p.justStartedStepping) return; // abort if player is moving. if he just started moving it's fine.
 	
 		var p = this.entity.p;
 		
@@ -312,18 +256,19 @@ Q.component("playerFunctions", {
 		// If the player hasnt moved yet, return
 		if (!p.hasMoved) return;
 		
-		var i = 0,
-			l = p.switchPoints.length;
+		var switchPoints = $maps[$activeMap].settings.switchPoints,
+			i = 0,
+			l = switchPoints.length;
 			
 		// Go through switchPoints, check if player is on one
 		for ( i = 0; i < l; i++){
 			
 			// If player is on the switch point
-			if (p.x == p.switchPoints[i][0] && p.y == p.switchPoints[i][1]){
+			if (p.x == switchPoints[i][0] && p.y == switchPoints[i][1]){
 				
-				mapSwitch(p.switchPoints[i][2], p.switchPoints[i][3]);
+				mapSwitch(switchPoints[i][2]); // Argument signifies name of new map
 				
-				// Stop searching!
+				// We switch! Stop searching!
 				break;
 				
 			}

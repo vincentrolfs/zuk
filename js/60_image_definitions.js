@@ -13,8 +13,44 @@ Q.animations("person_animations", {
 
 });
 
-Q.sheet("person_sheet_old_man",
-		"persons/old_man.png",
+Q.sheet(MARKER_SHEET,
+		IMAGEFILE_PERSON_MARKER,
+		{
+			tilew: 32,
+			tileh: 32,
+			spacingX: 16
+		}
+);
+
+Q.sheet("max",
+		"persons/max.png",
+		{
+			tilew: 32,
+			tileh: 32,
+			spacingX: 16
+		}
+);
+
+Q.sheet("jersey",
+		"persons/jersey.png",
+		{
+			tilew: 32,
+			tileh: 32,
+			spacingX: 16
+		}
+);
+
+Q.sheet("claire",
+		"persons/claire.png",
+		{
+			tilew: 32,
+			tileh: 32,
+			spacingX: 16
+		}
+);
+
+Q.sheet("robert",
+		"persons/robert.png",
 		{
 			tilew: 32,
 			tileh: 32,
