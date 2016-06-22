@@ -51,14 +51,14 @@ Q.Sprite.extend("Blackness", {
 });
 
 // Scene for surrounding blackness
-Q.scene("_blackmap", function(stage){
+Q.scene(SCENE_BLACKMAP, function(stage){
 
 	stage.insert(new Q.Blackness());
 	
 });
 
 // Scene for ui
-Q.scene("_ui", function(stage){
+Q.scene(SCENE_UI, function(stage){
 
 	$ui_textContainer = stage.insert(new Q.UI.Container({
 		

@@ -2,8 +2,6 @@
 
 // script.js
 
-A = []
-
 window.Q = Quintus({ 
 	
 	development: true,

@@ -2,6 +2,8 @@
 
 	Q.debug = 0;
 	
+	inDevMode = false;
+	
 	devArea = $("#devArea");
 	devArea.hide();
 	
@@ -12,11 +14,11 @@
 	
 		if (!e.ctrlKey || e.keyCode != 71) return; // Press ctrl+g
 	
-		$dev_mode = !$dev_mode;
+		inDevMode = !inDevMode;
 		devArea.toggle();
-		console.log("dev_mode: ", $dev_mode? "ON" : "OFF");
+		console.log("dev_mode: ", inDevMode? "ON" : "OFF");
 		
-		if ($dev_mode) updateDevArea();
+		if (inDevMode) updateDevArea();
 	
 	}
 	
@@ -52,7 +54,7 @@
 	
 	function canvasClick(e){
 	
-		if (!$dev_mode) return false;
+		if (!inDevMode) return false;
 		
 		var clickArea = $("#click", devArea),
 			tileX = Math.floor(Q.inputs["mouseX"]/16.0) * 16 + 8,

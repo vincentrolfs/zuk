@@ -6,6 +6,9 @@ var BLACKMAP_LEVEL = 0;
 var MAIN_LEVEL = 1;
 var UI_LEVEL = 2;
 
+var SCENE_BLACKMAP = "_blackmap";
+var SCENE_UI = "_ui";
+
 var MUSIC_COOKIENAME = "musicEnabled";
 var SOUND_COOKIENAME = "soundEnabled";
 var SAVEGAME_COOKIENAME = "savegame";
@@ -35,7 +38,7 @@ var TEXT_SIZE = 26;
 // Global varibales start with $
 var $musicEnabled = docCookies.getItem(MUSIC_COOKIENAME) === COOKIE_TRUTHVALUE,
 	$soundEnabled = docCookies.getItem(SOUND_COOKIENAME) === COOKIE_TRUTHVALUE,
-	$music = "", // Current song of map
+	$currentSong = "",
 	
 	$state = {
 		
@@ -60,20 +63,18 @@ var $musicEnabled = docCookies.getItem(MUSIC_COOKIENAME) === COOKIE_TRUTHVALUE,
 	$ui_text, // Displayed text itself
 	$ui_busy = false,
 	
-	$dev_mode = false,
-	
 	$player; // Variable holds instance of Person class that has player functions
 
 function startGame(){
 	
 	var saveCookie = docCookies.getItem(SAVEGAME_COOKIENAME),
-		saveObject,
+		savegame,
 		error = false,
 		mapToStage;
 		
 	try {
 	 	
-	 	saveObject = JSON.parse(saveCookie);
+	 	savegame = JSON.parse(saveCookie);
 	
 	} catch(e){
 	
@@ -81,26 +82,26 @@ function startGame(){
 	
 	}
 	
-	if (error || !saveObject || location.search === "?new"){
+	if (error || !savegame || location.search === "?new"){
 	
 		mapToStage = DEFAULT_MAP;
 		console.log("Could not load savegame.");
 	
 	} else {
 	
-		$savegame = saveObject;
-		mapToStage = saveObject.player.map;
+		$savegame = savegame;
+		mapToStage = savegame.player.map;
 		
-		// Save map data
+		// Load map data
 		
-		var savedMaps = saveObject.maps;
+		var savedMaps = savegame.maps;
 		
-		for (var map in savedMaps){
+		for (var mapName in savedMaps){
 		
-			if (savedMaps.hasOwnProperty(map) && $maps.hasOwnProperty(map)){
+			if (savedMaps.hasOwnProperty(mapName) && $maps.hasOwnProperty(mapName)){
 		
-				$maps[map].p.act = savedMaps[map].act;
-				loadItems(map);
+				$maps[mapName].p.act = savedMaps[mapName].act;
+				loadItems(mapName);
 			
 			}
 		
@@ -108,14 +109,14 @@ function startGame(){
 		
 		// Save state
 		
-		$state = saveObject.state;
+		$state = savegame.state;
 		
-		console.log("Loaded savegame and maps: ", saveObject, $maps);
+		console.log("Loaded savegame and maps: ", savegame, $maps);
 	
 	}
 	
-	Q.stageScene("_blackmap", BLACKMAP_LEVEL);
-	Q.stageScene("_ui", UI_LEVEL);
+	Q.stageScene(SCENE_BLACKMAP, BLACKMAP_LEVEL);
+	Q.stageScene(SCENE_UI, UI_LEVEL);
 	
 	Q.stageScene(mapToStage, MAIN_LEVEL);
 
@@ -168,14 +169,14 @@ function saveGame(){
 	
 	var mapData = {};
 	
-	for (var map in $maps){
+	for (var mapName in $maps){
 	
-		if ($maps.hasOwnProperty(map)){
+		if ($maps.hasOwnProperty(mapName)){
 	
-			mapData[map] = {
+			mapData[mapName] = {
 			
-				items: $maps[map].p.items,
-				act: $maps[map].p.act
+				items: $maps[mapName].p.items,
+				act: $maps[mapName].p.act
 			
 			}
 		
@@ -186,10 +187,8 @@ function saveGame(){
 	saveObject["maps"] = mapData;
 	
 	saveString = JSON.stringify(saveObject);
-	
 	docCookies.setItem(SAVEGAME_COOKIENAME, saveString, Infinity);
-	
-	console.log("saved: ", saveString);
+	console.log("Saved game: ", saveString);
 	
 	displayText(["Spiel gespeichert!"]);
 
@@ -201,26 +200,26 @@ function resetPlayer(){ // Will be called when maps are staged
 
 }
 
-function handleMusic(newMusic){
+function handleMusic(newSong){
 	
-	if (newMusic){
+	if (newSong){
 	
-		if (newMusic == $music) return; // The music for the new map is the same!
+		if (newSong == $currentSong) return; // The music for the new map is the same!
 	
-		else $music = newMusic;
+		else $currentSong = newSong;
 	
 	}
 
 	Q.audio.stop();
 	
-	// newMusic was just empty string - just stop music.
-	if (!$music) return;
+	// newSong was just empty string - just stop music.
+	if (!$currentSong) return;
 		
-	Q.load($music, function(){
+	Q.load($currentSong, function(){
 	
 		if ($musicEnabled){
 		
-			Q.audio.play($music, { loop: true });
+			Q.audio.play($currentSong, { loop: true });
 		
 		}
 		

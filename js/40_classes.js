@@ -145,7 +145,7 @@ Q.Class.extend("Map", {
 				// Blackmap if no tmx file is provided!
 				if (!s.fileName){
 				
-					Q.stageScene("blackmap", BLACKMAP_LEVEL);
+					Q.stageScene(SCENE_BLACKMAP, MAIN_LEVEL);
 				
 					organiseAct();
 				
