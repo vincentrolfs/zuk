@@ -8,7 +8,7 @@ document.getElementById("musicEnabled").onclick = function(){
 	 
 	 handleMusic();
 	 
-	 document.getElementById("canvas").focus();
+	 document.getElementById(CANVAS_ID).focus();
 	
 }
 
@@ -19,7 +19,7 @@ document.getElementById("soundEnabled").onclick = function(){
 	 
 	 docCookies.setItem(SOUND_COOKIENAME, $soundEnabled? COOKIE_TRUTHVALUE : COOKIE_FALSEVALUE, Infinity);
 	 
-	 document.getElementById("canvas").focus();
+	 Q.el.focus();
 	
 }
 

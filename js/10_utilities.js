@@ -1,69 +1,6 @@
 // todo
 // - bumping sound hack
-
-// Not used everywhere yet
-var BLACKMAP_LEVEL = 0; 
-var MAIN_LEVEL = 1;
-var UI_LEVEL = 2;
-
-var SCENE_BLACKMAP = "_blackmap";
-var SCENE_UI = "_ui";
-
-var MUSIC_COOKIENAME = "musicEnabled";
-var SOUND_COOKIENAME = "soundEnabled";
-var SAVEGAME_COOKIENAME = "savegame";
-
-// What value to use when saving a boolean cookie, e.g. soundEnabled
-var COOKIE_TRUTHVALUE = "1";
-var COOKIE_FALSEVALUE = "0";
-
-var PLAYER_SHEET = "robert";
-
-var DEFAULT_MAP = "begin";
-var MAP_SWITCH_TIMEOUT = 300;
-var DEFAULT_TEXT_SPEED = 1500;
-
-var SOUNDFILE_BUMP = "bump.mp3";
-var SOUNDFILE_ITEM = "item.mp3";
-
-var MARKER_SHEET = "marker";
-
-var IMAGEFILE_ASSET_MARKER = "asset_marker.png";
-var IMAGEFILE_PERSON_MARKER = "persons/person_marker.png";
-var IMAGEFILE_ITEM = "item.png";
-
-var TEXT_FAMILY = "aller";
-var TEXT_SIZE = 26;
-
-// Global varibales start with $
-var $musicEnabled = docCookies.getItem(MUSIC_COOKIENAME) === COOKIE_TRUTHVALUE,
-	$soundEnabled = docCookies.getItem(SOUND_COOKIENAME) === COOKIE_TRUTHVALUE,
-	$currentSong = "",
-	
-	$state = {
-		
-		items: {}
-	
-	},
-	
-	$itemNames = {
-	
-		"1": "Sprudel",
-		"2": "Goldtaler"
-	
-	},
-	
-	$savegame, // Hier werden die gespeicherten Daten reingetan, wenn Spiel geladen wird
-	
-	$activeMap = "",
-	$maps = {},
-	
-	$ui_textContainer, // Container for displayed text
-	$ui_textTriangle,
-	$ui_text, // Displayed text itself
-	$ui_busy = false,
-	
-	$player; // Variable holds instance of Person class that has player functions
+// - music doesn't work properly in safari
 
 function startGame(){
 	
@@ -194,7 +131,7 @@ function saveGame(){
 
 }
 
-function resetPlayer(){ // Will be called when maps are staged
+function resetPlayer(){
 
 	$player = new Q.Person({sheet: PLAYER_SHEET}, true);
 
