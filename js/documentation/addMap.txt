@@ -1,0 +1,25 @@
+Game::addMap(Object data)
+
+data = {
+
+	mapName: "",								// Required
+	fileName: "", 								// Optional (blackmap if not provided)
+
+	loadingPoints:  { default: [0, 0] },		// Optional if blackmap
+	switchPoints: [],							// Optional
+
+	items: [], 									// Optional
+	invisibles: [], 							// Optional
+	persons: [], 								// Optional
+	music: "",									// Optional
+
+	firstAct: "0",								// Optional
+	acts: [										// Optional, can be object or array. If object, the keys will be the names of the acts
+
+		{ persons: [], invisibles: [], organise: function(){} } // Optional (all)
+
+	], 								
+
+	loadAssetsOf: []							// Optional (signifies for which maps this one should also preload the assets. Assets of nearby maps are loaded automatically.)
+
+}

@@ -137,6 +137,6 @@ function createImageDefinitions(){
 Q.load([MAIN_TILESET, INTERIOR_TILESET, IMAGEFILE_ITEM, IMAGEFILE_PERSON_MARKER, IMAGEFILE_ASSET_MARKER, "persons/max.png", "persons/jersey.png", "persons/robert.png", "persons/claire.png", SOUNDFILE_BUMP, SOUNDFILE_ITEM, "triangle.png"], function() {
 	
 	createImageDefinitions();
-	startGame();
+	zuk.start();
 
 });

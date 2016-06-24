@@ -1,4 +1,9 @@
+// HTML id's
+
 var CANVAS_ID = "canvas";
+var MUSIC_CHECKBOX_ID = "musicEnabled";
+var SOUND_CHECKBOX_ID = "soundEnabled";
+var SAVE_BUTTON_ID = "save";
 
 var BLACKMAP_LEVEL = 0; 
 var MAIN_LEVEL = 1;
@@ -14,6 +19,13 @@ var SAVEGAME_COOKIENAME = "savegame";
 // What value to use when saving a boolean cookie, e.g. soundEnabled
 var COOKIE_TRUTHVALUE = "1";
 var COOKIE_FALSEVALUE = "0";
+
+var ITEM_NAMES = {
+
+	"1": "Quietscheentchen",
+	"2": "Goldtaler"
+
+};
 
 var MAIN_TILESET = "dp_tileset.png";
 var INTERIOR_TILESET = "interior.png";
@@ -32,6 +44,9 @@ var SOUNDFILE_ITEM = "item.mp3";
 var DEFAULT_MAP = "begin";
 var MAP_SWITCH_TIMEOUT = 300;
 var DEFAULT_TEXT_SPEED = 1500;
+
+var MUSIC_ENABLED_DEFAULT = true;
+var SOUND_ENABLED_DEFAULT = true;
 
 var TEXT_FAMILY = "aller";
 var TEXT_SIZE = 26;

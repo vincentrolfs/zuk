@@ -28,7 +28,7 @@
 	
 		listArea.html("");
 	
-		var actionSprites = getActionSprites(),
+		var actionSprites = zuk.getActionSprites(),
 			l = actionSprites.length,
 			el,
 			sprite;

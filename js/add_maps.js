@@ -1,5 +1,5 @@
 // Pathway
-addMap({
+zuk.addMap({
 
 	mapName: "pathway",
 	fileName: "pathway.tmx",
@@ -23,13 +23,12 @@ addMap({
 		
 			persons: [{
 			
-				x: 136,
-				y: 80,
+				x: 88,
+				y: 48,
 				direction: "down",
-				walk: true,
 				interact: function(callback){
 				
-					displayText(["In deinem Alter noch so schnell unterwegs...", "Mach's wie ich und gönn' dir mal 'ne Pause!"]);
+					zuk_ui.displayText(["In deinem Alter noch so schnell unterwegs...", "Mach's wie ich und gönn' dir mal 'ne Pause!"]);
 				
 				}
 			
@@ -43,7 +42,7 @@ addMap({
 				walk: true,
 				interact: function(callback){
 				
-					displayText(["Major Tom? Ich halte nichts von ihm.", "Ich finde ihn arrogant!"]);
+					zuk_ui.displayText(["Major Tom? Ich halte nichts von ihm.", "Ich finde ihn arrogant!"]);
 				
 				}
 			
@@ -55,13 +54,13 @@ addMap({
 				direction: "down",
 				interact: function(callback){
 				
-					if ($maps.pathway.p.act === "meet_tom"){
+					if (zuk.getMap("pathway").p.act === "meet_tom"){
 		
-						displayText(["Hey du!", "Komm her!"], function(){
+						zuk_ui.displayText(["Hey du!", "Komm her!"], function(){
 					
-							$player.go(["up", "up"], function(){
+							zuk.getPlayer().go(["up", "up"], function(){
 						
-								displayText("Mein Name ist Major Tom.", callback);
+								zuk_ui.displayText("Mein Name ist Major Tom.", callback);
 						
 							});
 					
@@ -69,7 +68,7 @@ addMap({
 					
 					} else {
 					
-						displayText("...", callback);
+						zuk_ui.displayText("...", callback);
 					
 					}
 		
@@ -79,12 +78,12 @@ addMap({
 			
 			organise: function(){
 			
-				$player.setControl(false);
+				zuk.getPlayer().setControl(false);
 				
-				$maps.pathway.p.persons[0].p.interact(function(){
+				....p.interact(function(){
 					
-					$player.setControl(true);
-					$maps.pathway.p.act = "exploring";
+					zuk.getPlayer().setControl(true);
+					zuk.getMap("pathway").p.act = "exploring";
 					
 				});
 			
@@ -97,7 +96,7 @@ addMap({
 });
 
 // Blue Room
-addMap({
+zuk.addMap({
 
 	mapName: "blue_room",
 	fileName: "blue_room.tmx",
@@ -124,7 +123,7 @@ addMap({
 });
 
 // Jersey's Room
-addMap({
+zuk.addMap({
 
 	mapName: "jerseys_room",
 	fileName: "jerseys_room.tmx",
@@ -151,7 +150,7 @@ addMap({
 });
 
 // Town
-addMap({
+zuk.addMap({
 
 	mapName: "town",
 	fileName: "town.tmx",
@@ -180,11 +179,20 @@ addMap({
 	items: [{ x: 136, y: 96, no: 1 }],
 	invisibles: [
 	
-		{
+		/*{
 			x: 40, y: 144,
 			interact: function(){
 		
-				displayText(["Da wurde etwas in den Baum geritzt!", '"Game Development by Vincent (musike)"', "Wer das wohl ist?"]);
+				zuk_ui.displayText(["Da wurde etwas in den Baum geritzt!", '"Game Development by Vincent"', "Wer das wohl ist?"]);
+		
+			}	
+		},*/
+		
+		{
+			x: 264, y: 368,
+			interact: function(){
+		
+				zuk_ui.displayText(["Die Tür ist verschlossen..."]);
 		
 			}	
 		}
@@ -196,7 +204,7 @@ addMap({
 		y: 400,
 		interact: function(){
 		
-			displayText("*Hust, Hust* \n Oh man, mir geht es gar nicht gut...");
+			zuk_ui.displayText("*Hust, Hust* \n Oh man, mir geht es gar nicht gut...");
 		
 		},
 		walk: true
@@ -212,16 +220,17 @@ addMap({
 				x: 120,
 				y: 240,
 				sheet: "jersey",
+				_tag: "jersey",
 				direction: "left",
 				interact: function(callback){
 				
 					var text;
 					
-					if ($maps.town.p.act == "new_game"){
+					if (zuk.getMap("town").p.act == "new_game"){
 					
 						text = "Ich: Jersey?\nDa bist du ja! Ich wollte dich gerade wecken. Vorhin ist ein Brief eingetroffen - von der Regierung! \nMajor Tom hat geschrieben dass du dich sofort mit ihm treffen sollst. Er wartet im nächsten Dorf auf dich! Am besten gehst du sofort los!";
 						
-						$maps.town.p.act = "exploring";
+						zuk.getMap("town").p.act = "exploring";
 					
 					} else {
 					
@@ -229,9 +238,9 @@ addMap({
 					
 					}
 				
-					displayText(text, function(){
+					zuk_ui.displayText(text, function(){
 					
-						$player.setControl(true);
+						zuk.getPlayer().setControl(true);
 						if(typeof callback == "function") callback();
 					
 					});
@@ -242,12 +251,12 @@ addMap({
 			
 			organise: function(){
 			
-				$player.setControl(false);
-				$player.go(["right"], function(){
+				zuk.getPlayer().setControl(false);
+				zuk.getPlayer().go(["right"], function(){
 				
-					$maps.town.p.persons[1].p.interact(function(){
+					zuk.filterPersons("_tag", "jersey")[0].p.interact(function(){
 					
-						$player.setControl(true);
+						zuk.getPlayer().setControl(true);
 					
 					});
 				
@@ -267,7 +276,7 @@ addMap({
 				direction: "left",
 				interact: function(callback){
 				
-					displayText("Hast du schon mit Major Tom geredet?\nEr wartet im nächsten Dorf auf dich.", callback);
+					zuk_ui.displayText("Hast du schon mit Major Tom geredet?\nEr wartet im nächsten Dorf auf dich.", callback);
 				
 				}
 			
@@ -280,7 +289,7 @@ addMap({
 });
 
 // Players room
-addMap({
+zuk.addMap({
 
 	mapName: "players_room",
 	fileName: "interior.tmx",
@@ -307,13 +316,13 @@ addMap({
 			
 			organise: function(){
 				
-				$maps.players_room.p.act = "exploring";
+				zuk.getMap("players_room").p.act = "exploring";
 				
-				displayText(["Was für eine Nacht...", "So schlecht geträumt habe ich lange nicht mehr.", "Aber jetzt erinnere ich alles nur noch verschwommen...", "Jersey kam vor, denke ich, und noch jemand...", "War es... Major Tom?", "Er antwortet seit Wochen nicht mehr auf meine Briefe.", "Ich sollte gehen und Jersey fragen, ob er etwas", "weiß, immerhin kennt er ihn besser als ich."], function(){
+				zuk_ui.displayText(["Was für eine Nacht...", "So schlecht geträumt habe ich lange nicht mehr.", "Aber jetzt erinnere ich alles nur noch verschwommen...", "Jersey kam vor, denke ich, und noch jemand...", "War es... Major Tom?", "Er antwortet seit Wochen nicht mehr auf meine Briefe.", "Ich sollte gehen und Jersey fragen, ob er etwas", "weiß, immerhin kennt er ihn besser als ich."], function(){
 					
-					$player.setControl(false);
+					zuk.getPlayer().setControl(false);
 					
-					$player.go(["right", "right", "right", "up", "up", "up", "up", "right", "right", "right", "up", "up", "up"]);
+					zuk.getPlayer().go(["right", "right", "right", "up", "up", "up", "up", "right", "right", "right", "up", "up", "up"]);
 					
 				});
 				
@@ -326,7 +335,7 @@ addMap({
 });
 
 // Cave
-addMap({
+zuk.addMap({
 
 	mapName: "cave",
 	fileName: "cave.tmx",
@@ -353,54 +362,55 @@ addMap({
 		
 			persons: [{ 
 			
-				x: 200, y: 112,
-				sheet: "jersey",
-				direction: "up"
-				
-			}, { 
-			
-				x: 216, y: 96,
-				sheet: "jersey",
-				direction: "up"
-				
-			}, { 
-			
-				x: 184, y: 96,
-				sheet: "jersey",
-				direction: "up"
-				
-			}, { 
-			
 				x: 168, y: 80,
-				sheet: "jersey",
+				sheet: "claire",
 				direction: "right"
 				
 			}, { 
 			
-				x: 232, y: 80,
+				x: 184, y: 96,
+				sheet: "max",
+				direction: "up"
+				
+			},{ 
+			
+				x: 200, y: 112,
 				sheet: "jersey",
+				_tag: "jersey",
+				direction: "up"
+				
+			},{ 
+			
+				x: 216, y: 96,
+				sheet: "claire",
+				direction: "up"
+				
+			},{ 
+			
+				x: 232, y: 80,
+				sheet: "max",
 				direction: "left"
 				
 			}],
 			
 			organise: function(){
 			
-				$player.setControl(false);
+				zuk.getPlayer().setControl(false);
 				
-				$maps.cave.p.act = "exploring";
-				$maps.begin.p.act = "intro2";
+				zuk.getMap("cave").p.act = "exploring";
+				zuk.getMap("begin").p.act = "intro2";
 				
 				setTimeout(function(){
 				
-					displayText("...\n Es ist entschieden!", function(){
+					zuk_ui.displayText("...\n Es ist entschieden!", function(){
 				
 						setTimeout(function(){
 			
-							$maps.cave.p.persons[0].go("up", function(){
+							zuk.filterPersons("_tag", "jersey")[0].go("up", function(){
 					
-								displayText("Hiermit ernenne ich dich zum Dorfältesten! \n Mögest du uns Weisheit und Wohlstand bringen! \n ALLE: Weisheit und Wohlstand!", function(){
+								zuk_ui.displayText("Hiermit ernenne ich dich zum Dorfältesten! \n Mögest du uns Weisheit und Wohlstand bringen! \n ALLE: Weisheit und Wohlstand!", function(){
 								
-									mapSwitch("begin");
+									zuk.switchMap("begin");
 								
 								}, 3000);
 					
@@ -421,7 +431,7 @@ addMap({
 });
 
 // Begin
-addMap({
+zuk.addMap({
 
 	mapName: "begin",
 	music: "icy-sanctum.mp3", // "good-night.mp3",
@@ -433,13 +443,13 @@ addMap({
 			
 			organise: function(){
 				
-				$maps.cave.p.act = "new_game";
-				$maps.players_room.p.act = "new_game";
-				$maps.town.p.act = "new_game";
+				zuk.getMap("cave").p.act = "new_game";
+				zuk.getMap("players_room").p.act = "new_game";
+				zuk.getMap("town").p.act = "new_game";
 				
-				displayText("Alles begann in einer dunklen Oktobernacht... \n Der Nacht in der ich zum Dorfältesten ernannt wurde...", function(){
+				zuk_ui.displayText("Alles begann in einer dunklen Oktobernacht... \n Der Nacht in der ich zum Dorfältesten ernannt wurde...", function(){
 					
-					mapSwitch("cave");
+					zuk.switchMap("cave");
 					
 				});
 				
@@ -451,9 +461,9 @@ addMap({
 			
 			organise: function(){
 				
-				displayText("Und so nahm das Unheil seinen Lauf...\nNie hätte ich gedacht, dass sowas \n bei uns passieren würde! \n Aber ich greife vor...", function(){
+				zuk_ui.displayText("Und so nahm das Unheil seinen Lauf...\n Nie hätte ich gedacht, \n dass soetwas bei uns passieren würde! \n Aber ich greife vor... \n Folgendes ereignete sich etwa zwei Jahre später...", function(){
 					
-					mapSwitch("players_room");
+					zuk.switchMap("players_room");
 					
 				});
 				

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="25" height="30" tilewidth="16" tileheight="16">
- <tileset firstgid="1" name="dp_tileset" tilewidth="16" tileheight="16">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="25" height="30" tilewidth="16" tileheight="16" nextobjectid="1">
+ <tileset firstgid="1" name="dp_tileset" tilewidth="16" tileheight="16" tilecount="32640">
   <image source="../images/dp_tileset.png" width="4095" height="2048"/>
  </tileset>
  <layer name="Bottom 1" width="25" height="30">
@@ -2871,7 +2871,7 @@
    <tile gid="2696"/>
    <tile gid="923"/>
    <tile gid="28443"/>
-   <tile gid="0"/>
+   <tile gid="28444"/>
    <tile gid="28445"/>
    <tile gid="28446"/>
    <tile gid="28447"/>
@@ -3628,7 +3628,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="28444"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>

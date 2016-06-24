@@ -61,9 +61,17 @@ body {
 
 }
 
+#controls {
+
+	margin-top: 10px;
+
+	line-height: 1.5;
+
+}
+
 #devArea {
 
-	display: block;
+	display: none;
 	margin-top: 10px;
 	line-height: 1.5;
 

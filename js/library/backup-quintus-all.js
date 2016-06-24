@@ -5129,7 +5129,6 @@ Quintus.Sprites = function(Q) {
     @param {Object} options
     */
     init: function(name, asset,options) {
-    	console.log("$", name, asset, options);
       if(!Q.asset(asset)) { throw "Invalid Asset:" + asset; }
       Q._extend(this,{
         name: name,

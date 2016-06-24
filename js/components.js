@@ -1,5 +1,6 @@
 // Had to change the component "stepControls" to disallow going up+right at the same time
 // also making methods to go into directions avaible
+// component smartControls
 Q.component("smartControls", {
 	 
 	added: function() {
@@ -123,6 +124,7 @@ Q.component("smartControls", {
 
 });
 
+// component playerFunctions
 Q.component("playerFunctions", {
 	 
 	// Initialize some stuff
@@ -159,8 +161,9 @@ Q.component("playerFunctions", {
 			
 			var p = this.entity.p;
 			
-			if (p.seriousBumps < 3){
+			if (p.seriousBumps < 2){
 			
+				p.seriousBumps++;
 				return;
 			
 			} else {
@@ -172,17 +175,18 @@ Q.component("playerFunctions", {
 		
 		}
 		
-		playSound(SOUNDFILE_BUMP);
+		this.entity.game.getAudioHandler().playSound(SOUNDFILE_BUMP);
 		
 	},
 	
 	// Check if player is tryna talk to somebody
 	checkAction: function(){
 		
-		var p = this.entity.p;
+		var p = this.entity.p,
+			game = this.entity.game;
 		
 		// Only check action if player is allowed to move + is standing still
-		if (p.freeze || p.stepping) return;
+		if (p.freeze || p.stepping || game.getUIHandler().isBusy()) return;
 		
 		// key: 	direction in which player is looking
 		// value: 	x coordinates of that point (converted so size of sprite doesn't matter)
@@ -197,7 +201,7 @@ Q.component("playerFunctions", {
 		
 			},
 			spot = places[p.direction], // The actual spot the player is looking at
-			actionSprites = getActionSprites(), // All the sprites the player can interact with
+			actionSprites = game.getActionSprites(), // All the sprites the player can interact with
 			i = 0,
 			l = actionSprites.length,
 			sprite;
@@ -208,19 +212,15 @@ Q.component("playerFunctions", {
 			
 			if ( (sprite.p.x) == spot[0] && (sprite.p.y + sprite.p.cy) == spot[1]){ // If the sprite is on the spot the player is looking at
 				
-				if (!$ui_busy){
-					
-					if (sprite.p.direction){
+				if (sprite.p.direction){
 						
-						// Change direction of sprite if it has one
-						sprite.p.direction = spot[2];
-						
-					}
-						
-					// Interact with sprite; call the interact function so that "this" symbolizes the sprite
-					sprite.p.interact.call(sprite);
+					// Change direction of sprite if it has one
+					sprite.p.direction = spot[2];
 					
 				}
+					
+				// Interact with sprite; call the interact function so that "this" symbolizes the sprite
+				sprite.p.interact.call(sprite);
 			
 			}
 		
@@ -230,9 +230,11 @@ Q.component("playerFunctions", {
 	
 	checkSwitchPoints: function(){
 	
-		if (this.entity.p.stepping && !this.entity.p.justStartedStepping) return; // abort if player is moving. if he just started moving it's fine.
+		// abort if player is moving. if he just started moving it's fine.
+		if (this.entity.p.stepping && !this.entity.p.justStartedStepping) return;
 	
-		var p = this.entity.p;
+		var p = this.entity.p,
+			game = this.entity.game;
 		
 		// Check if player has moved since he arrived on the map
 		if (
@@ -256,7 +258,7 @@ Q.component("playerFunctions", {
 		// If the player hasnt moved yet, return
 		if (!p.hasMoved) return;
 		
-		var switchPoints = $maps[$activeMap].settings.switchPoints,
+		var switchPoints = game.getActiveMap().settings.switchPoints,
 			i = 0,
 			l = switchPoints.length;
 			
@@ -266,7 +268,7 @@ Q.component("playerFunctions", {
 			// If player is on the switch point
 			if (p.x == switchPoints[i][0] && p.y == switchPoints[i][1]){
 				
-				mapSwitch(switchPoints[i][2]); // Argument signifies name of new map
+				game.switchMap(switchPoints[i][2]); // Argument signifies name of new map
 				
 				// We switch! Stop searching!
 				break;

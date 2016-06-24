@@ -21,6 +21,9 @@
 
 <div id="menu">
 	<button id="save">Speichern</button>
+	<div id="controls">
+	Steuerung: Benutze die Pfeiltasten oder W-A-S-D um dich zu bewegen, und x oder die Leertaste, um mit Leuten zu sprechen, Kisten aufzuheben, verschlossene Türen zu öffnen (man kanns ja versuchen), etc...
+	</div>
 	<div id="devArea">
 		<div id="click">Click on the canvas to do something.</div>
 		<hr/>
@@ -30,23 +33,29 @@
 
 </div>
 
-<script src='js/lib/backup-quintus-all.js'></script>
-<script src='js/lib/docCookies.js'></script>
-<script src='js/lib/seedrandom.min.js'></script>
-<script src='js/lib/zepto.min.js'></script>
+<script src='js/library/backup-quintus-all.js'></script>
+<script src='js/library/docCookies.js'></script>
+<script src='js/library/seedrandom.min.js'></script>
+<script src='js/library/zepto.min.js'></script>
 
-<script src="js/00_constants.js"></script>
-<script src="js/01_globals.js"></script>
-<script src="js/02_prepare_game.js"></script>
+<script src="js/constants.js"></script>
+<script src="js/setup_quintus.js"></script>
 
-<script src="js/10_utilities.js"></script>
-<script src="js/20_ui.js"></script>
-<script src="js/30_components.js"></script>
-<script src="js/40_classes.js"></script>
-<script src="js/50_add_maps.js"></script>
+<script src="js/classes/Game.js"></script>
+<script src="js/classes/AudioHandler.js"></script>
+<script src="js/classes/UIHandler.js"></script>
+<script src="js/classes/Map.js"></script>
+<script src="js/classes/Person.js"></script>
+<script src="js/classes/Item.js"></script>
+<script src="js/classes/Invisible.js"></script>
+<script src="js/components.js"></script>
 
-<script src="js/60_start_game.js"></script>
-<script src="js/70_development.js"></script>
+<script src="js/setup_zuk.js"></script>
+
+<script src="js/add_maps.js"></script>
+<script src="js/start_game.js"></script>
+
+<script src="js/development.js"></script>
 
 </body>
 </html>

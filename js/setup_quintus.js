@@ -3,9 +3,10 @@ window.Q = Quintus({
 	audioSupported: ["mp3"]
 })
 .include("Sprites, Scenes, Input, 2D, Anim, TMX, UI, Audio")
-.setup("canvas")
-.controls()
-.enableSound();
+.setup(CANVAS_ID)
+.controls(); 
+
+Q.audio.enableWebAudioSound();
 
 Q.input.keyboardControls({
 	X: "action",
@@ -28,14 +29,3 @@ Q.input.mouseControls({
 		
 // No gravity please
 Q.gravityX = Q.gravityY = 0;
-
-Q.Class.extend("Game", {
-
-	init: function(){
-	
-		// Provides better Math.random
-		Math.seedrandom();
-	
-	}
-
-});
