@@ -6,7 +6,8 @@ Q.Class.extend("UIHandler", {
 		
 		this.textContainer;
 		this.text;
-		this.textTriangle;
+		this.scrollMarker;
+		this.loadStatus;
 	
 		this.game = game;
 		this.audioHandler = audioHandler;
@@ -15,6 +16,8 @@ Q.Class.extend("UIHandler", {
 		this.createScenes();
 		this.setupCheckboxes();
 		this.setupSaveButton();
+		
+		this.stageScenes();
 	
 	},
 	
@@ -24,12 +27,27 @@ Q.Class.extend("UIHandler", {
 	
 	},
 	
-	outputString: function(str, showTriangle){
+	outputString: function(str, showScrollMarker){
 	
 		this.text.p.label = str;
 	
 		this.textContainer.p.hidden = false;
-		this.textTriangle.p.hidden = showTriangle;
+		this.scrollMarker.p.hidden = showScrollMarker;
+	
+	},
+	
+	displayLoadingText: function(text){
+	
+		console.log("Loading text: ", text);
+	
+		this.loadStatus.p.hidden = false;
+		this.loadStatus.p.label = text;
+	
+	},
+	
+	hideLoadingText: function(){
+	
+		this.loadStatus.p.hidden = true;
 	
 	},
 	
@@ -193,6 +211,7 @@ Q.Class.extend("UIHandler", {
 	
 			}));
 	
+			// Upper border
 			stage.insert(new Q.UI.Container({
 				w: Q.el.width,
 				h: 5,
@@ -201,8 +220,8 @@ Q.Class.extend("UIHandler", {
 				radius: 0
 			}), UIHandler.textContainer);
 	
-			UIHandler.textTriangle = stage.insert(new Q.UI.Button({
-				asset: "triangle.png",
+			UIHandler.scrollMarker = stage.insert(new Q.UI.Button({
+				asset: null,
 				x: 330,
 				y: 20
 			}), UIHandler.textContainer);
@@ -213,10 +232,44 @@ Q.Class.extend("UIHandler", {
 				family: TEXT_FAMILY,
 				size: TEXT_SIZE,
 				x: 0,
-				y: 0
+				y: -15
 			}), UIHandler.textContainer);
+			
+			UIHandler.loadStatus = stage.insert(new Q.UI.Text({
+				label: "...",
+				hidden: true,
+				color: "white",
+				family: TEXT_FAMILY,
+				size: TEXT_SIZE,
+				x: Q.el.width/2,
+				y: Q.el.height/2 - 15
+			}));
 	
 		});
+	
+	},
+	
+	loadAssets: function(callback){
+	
+		var UIHandler = this;
+	
+		Q.load(IMAGEFILE_SCROLL_MARKER, function(){
+			
+			UIHandler.scrollMarker = Q.stages[UI_LEVEL].insert(new Q.UI.Button({
+				asset: IMAGEFILE_SCROLL_MARKER,
+				x: 330,
+				y: 20
+			}), UIHandler.textContainer);
+			if (typeof callback == "function") callback();
+		
+		});
+	
+	},
+	
+	stageScenes: function(){
+	
+		Q.stageScene(SCENE_BLACKMAP, BLACKMAP_LEVEL);
+		Q.stageScene(SCENE_UI, UI_LEVEL);
 	
 	},
 	

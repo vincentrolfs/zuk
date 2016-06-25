@@ -32,6 +32,7 @@ var INTERIOR_TILESET = "interior.png";
 
 var IMAGEFILE_ASSET_MARKER = "asset_marker.png";
 var IMAGEFILE_ITEM = "item.png";
+var IMAGEFILE_SCROLL_MARKER = "scroll_marker.png";
 
 var IMAGEFILE_PERSON_MARKER = "persons/person_marker.png";
 

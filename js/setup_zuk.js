@@ -5,5 +5,5 @@ var zuk = new Q.Game(),
 // todo
 // - bumping sound hack
 // - music doesn't work properly in safari
-// - maps.p.persons ist bisschen unnötig, weil man einfach Q.("Person", MAIN_LEVEL) machen kann. <= erstmal rausgenommen
+// - don't allow save when there is no player
 // - used array.filter => browser support?

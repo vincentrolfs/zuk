@@ -153,6 +153,8 @@ Q.component("playerFunctions", {
 	},
 	
 	bumpSound: function(collision){
+	
+		console.log("bumpSound");
 		
 		var obj = collision.obj;
 		

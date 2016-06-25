@@ -15,17 +15,53 @@ Q.Class.extend("Game", {
 
 		};
 		this.savegame = null;
+		this.startingMap = null;
 		this.activeMapName = "";
 		this.maps = {};
 	
 	},
-
+	
 	start: function(){
+	
+		console.log("Starting game from inside...");
+	
+		var game = this;
+		
+		this.UIHandler.loadAssets(function(){
+	
+			Q.load([MAIN_TILESET, INTERIOR_TILESET, IMAGEFILE_ITEM, IMAGEFILE_PERSON_MARKER, IMAGEFILE_ASSET_MARKER, "persons/max.png", "persons/jersey.png", "persons/robert.png", "persons/claire.png", SOUNDFILE_BUMP, SOUNDFILE_ITEM], function() {
+	
+				game.UIHandler.hideLoadingText();
+	
+				console.log("Loaded most important assets succesfully.");
+	
+				game.createImageDefinitions();
+				game.loadSavegame();
+	
+				Q.stageScene(game.startingMap, MAIN_LEVEL);
+				game.activeMapName = game.startingMap;
+
+			}, {
+		
+				progressCallback: function(loaded, total){
+		
+					game.UIHandler.displayLoadingText("Lade " + Math.round((loaded/total)*100) + "%...");
+		
+				},
+		
+			});
+		
+		});
+	
+	},
+
+	loadSavegame: function(){
+	
+		console.log("Trying to load savegame...");
 	
 		var saveCookie = docCookies.getItem(SAVEGAME_COOKIENAME),
 			savegame,
-			error = false,
-			mapToStage;
+			error = false;
 		
 		try {
 		
@@ -39,13 +75,13 @@ Q.Class.extend("Game", {
 	
 		if (error || !savegame || location.search === "?new"){
 	
-			mapToStage = DEFAULT_MAP;
-			console.log("Could not load savegame.");
+			this.startingMap = DEFAULT_MAP;
+			console.log("Could not load savegame: ", error, savegame);
 	
 		} else {
 	
 			this.savegame = savegame;
-			mapToStage = savegame.player.map;
+			this.startingMap = savegame.player.map;
 		
 			// Load map data
 		
@@ -62,21 +98,11 @@ Q.Class.extend("Game", {
 		
 			}
 		
-			// Save state
-		
 			this.playerState = savegame.playerState;
 		
-			console.log("Loaded savegame and maps: ", savegame, this.maps);
+			console.log("Loaded savegame successfully: ", savegame);
 	
 		}
-	
-		Q.stageScene(SCENE_BLACKMAP, BLACKMAP_LEVEL);
-		Q.stageScene(SCENE_UI, UI_LEVEL);
-	
-		Q.stageScene(mapToStage, MAIN_LEVEL);
-		this.activeMapName = mapToStage;
-		
-		console.log("Game is starting.");
 
 	},
 	loadItems: function(map){
@@ -257,6 +283,70 @@ Q.Class.extend("Game", {
 	
 		this.maps[mapData.mapName] = new Q.Map(mapData, this);
 	
+	},
+	
+	createImageDefinitions: function(){
+
+		Q.animations("person_animations", {
+		
+			stand_up: { 	frames: [0], loop: false },
+			stand_down: { 	frames: [5], loop: false },
+			stand_right: { frames: [1], loop: false },
+			stand_left: { 	frames: [6], loop: false },
+		
+			walk_up: { frames: [2, 0, 10], rate: 1/5 },
+			walk_down: { frames: [11, 5, 8], rate: 1/5 },
+			walk_right: { frames: [7, 1, 4], rate: 1/5 },
+			walk_left: { frames: [3, 6, 9], rate: 1/5 },
+	
+
+		});
+
+		Q.sheet(MARKER_SHEET,
+				IMAGEFILE_PERSON_MARKER,
+				{
+					tilew: 32,
+					tileh: 32,
+					spacingX: 16
+				}
+		);
+
+		Q.sheet("max",
+				"persons/max.png",
+				{
+					tilew: 32,
+					tileh: 32,
+					spacingX: 16
+				}
+		);
+
+		Q.sheet("jersey",
+				"persons/jersey.png",
+				{
+					tilew: 32,
+					tileh: 32,
+					spacingX: 16
+				}
+		);
+
+		Q.sheet("claire",
+				"persons/claire.png",
+				{
+					tilew: 32,
+					tileh: 32,
+					spacingX: 16
+				}
+		);
+
+		Q.sheet("robert",
+				"persons/robert.png",
+				{
+					tilew: 32,
+					tileh: 32,
+					spacingX: 16
+				}
+		);
+
 	}
 
 });

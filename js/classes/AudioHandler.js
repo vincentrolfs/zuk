@@ -9,14 +9,12 @@ Q.Class.extend("AudioHandler", {
 	
 	},
 	
-	setSong: function(song){
+	setSong: function(newSong){
 	
-		console.warn("new song: ", song);
+		if (this.currentSong == newSong) return;
 	
-		if (this.currentSong == song) return;
-	
-		this.currentSong = song;
-		this._handleMusicSettingChange();
+		this.currentSong = newSong;
+		this.handleMusicSettingChange();
 	
 	},
 	
@@ -25,7 +23,7 @@ Q.Class.extend("AudioHandler", {
 		if (this.musicEnabled == !!value) return;
 	
 		this.musicEnabled = !!value;
-		this._handleMusicSettingChange();
+		this.handleMusicSettingChange();
 	
 	},
 	
@@ -35,7 +33,7 @@ Q.Class.extend("AudioHandler", {
 	
 	},
 	
-	_handleMusicSettingChange: function(){
+	handleMusicSettingChange: function(){
 	
 		Q.audio.stop();
 	
@@ -50,7 +48,7 @@ Q.Class.extend("AudioHandler", {
 		
 		Q.load(songToPlay, function(){
 	
-			// The chosen song might change while we are loading. If that happens, don't
+			// The chosen song might change while we are loading. If that happens, don't play it1
 			if (audioHandler.musicEnabled && songToPlay == audioHandler.currentSong){
 		
 				Q.audio.play(songToPlay, { loop: true });
@@ -62,6 +60,8 @@ Q.Class.extend("AudioHandler", {
 	},
 	
 	playSound: function(soundfile){
+	
+		console.log("called");
 
 		if (this.soundEnabled) Q.audio.play(soundfile);
 
