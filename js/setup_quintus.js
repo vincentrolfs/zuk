@@ -1,5 +1,5 @@
 window.Q = Quintus({ 
-	development: true,
+	development: false,
 	audioSupported: ["mp3"]
 })
 .include("Sprites, Scenes, Input, 2D, Anim, TMX, UI, Audio")

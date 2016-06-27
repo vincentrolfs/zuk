@@ -151,7 +151,7 @@ Q.Class.extend("Map", {
 		
 			// ----- Start map creation
 		
-			Q.load(p.assets, function(){
+			game.getLoadingHandler().load(p.assets, function(){
 		
 				// Blackmap if no tmx file is provided!
 				if (!s.fileName){
@@ -265,7 +265,7 @@ Q.Class.extend("Map", {
 		
 				// ----- End loading of nearby maps' data
 		
-			});
+			}, "Lade Map: ");
 	
 		}, { // Options for scene
 		

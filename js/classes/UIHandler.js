@@ -11,6 +11,7 @@ Q.Class.extend("UIHandler", {
 	
 		this.game = game;
 		this.audioHandler = audioHandler;
+		this.loadingHandler;
 		
 		this.createSprites();
 		this.createScenes();
@@ -18,6 +19,12 @@ Q.Class.extend("UIHandler", {
 		this.setupSaveButton();
 		
 		this.stageScenes();
+	
+	},
+	
+	registerLoadingHandler: function(loadingHandler){
+	
+		this.loadingHandler = loadingHandler;
 	
 	},
 	
@@ -249,20 +256,28 @@ Q.Class.extend("UIHandler", {
 	
 	},
 	
+	applyLoadedAssets: function(){
+	
+		this.scrollMarker = Q.stages[UI_LEVEL].insert(new Q.UI.Button({
+			asset: IMAGEFILE_SCROLL_MARKER,
+			x: 330,
+			y: 20
+		}), this.textContainer);
+	
+	},
+	
 	loadAssets: function(callback){
+	
+		if (!this.loadingHandler) throw "loadAssets called with no loading handler set";
 	
 		var UIHandler = this;
 	
-		Q.load(IMAGEFILE_SCROLL_MARKER, function(){
+		this.loadingHandler.load([IMAGEFILE_SCROLL_MARKER], function(){
 			
-			UIHandler.scrollMarker = Q.stages[UI_LEVEL].insert(new Q.UI.Button({
-				asset: IMAGEFILE_SCROLL_MARKER,
-				x: 330,
-				y: 20
-			}), UIHandler.textContainer);
+			UIHandler.applyLoadedAssets();
 			if (typeof callback == "function") callback();
 		
-		});
+		}, "Lade Oberfläche: ");
 	
 	},
 	

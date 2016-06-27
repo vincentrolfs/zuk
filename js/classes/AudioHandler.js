@@ -43,19 +43,14 @@ Q.Class.extend("AudioHandler", {
 		
 		}
 		
-		var songToPlay = this.currentSong,
-			audioHandler = this;
+		if (typeof Q.assets[this.currentSong] === undefined){
 		
-		Q.load(songToPlay, function(){
-	
-			// The chosen song might change while we are loading. If that happens, don't play it1
-			if (audioHandler.musicEnabled && songToPlay == audioHandler.currentSong){
+			console.warn("Song " + this.currentSong + " has not been loaded and can't be played.");
+			return;
+			
+		}
 		
-				Q.audio.play(songToPlay, { loop: true });
-		
-			}
-		
-		});	
+		Q.audio.play(this.currentSong, { loop: true });
 	
 	},
 	

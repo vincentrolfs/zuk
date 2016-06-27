@@ -7,6 +7,9 @@ Q.Class.extend("Game", {
 		
 		this.audioHandler = new Q.AudioHandler();
 		this.UIHandler = new Q.UIHandler(this, this.audioHandler);
+		this.loadingHandler = new Q.LoadingHandler(this.UIHandler);
+		
+		this.UIHandler.registerLoadingHandler(this.loadingHandler);
 		
 		this.player = null; // Variable holds instance of Person class that has player functions
 		this.playerState = {
@@ -28,10 +31,8 @@ Q.Class.extend("Game", {
 		var game = this;
 		
 		this.UIHandler.loadAssets(function(){
-	
-			Q.load([MAIN_TILESET, INTERIOR_TILESET, IMAGEFILE_ITEM, IMAGEFILE_PERSON_MARKER, IMAGEFILE_ASSET_MARKER, "persons/max.png", "persons/jersey.png", "persons/robert.png", "persons/claire.png", SOUNDFILE_BUMP, SOUNDFILE_ITEM], function() {
-	
-				game.UIHandler.hideLoadingText();
+		
+			game.loadingHandler.load([MAIN_TILESET, INTERIOR_TILESET, IMAGEFILE_ITEM, IMAGEFILE_PERSON_MARKER, IMAGEFILE_ASSET_MARKER, "persons/max.png", "persons/jersey.png", "persons/robert.png", "persons/claire.png", SOUNDFILE_BUMP, SOUNDFILE_ITEM], function() {
 	
 				console.log("Loaded most important assets succesfully.");
 	
@@ -41,15 +42,7 @@ Q.Class.extend("Game", {
 				Q.stageScene(game.startingMap, MAIN_LEVEL);
 				game.activeMapName = game.startingMap;
 
-			}, {
-		
-				progressCallback: function(loaded, total){
-		
-					game.UIHandler.displayLoadingText("Lade " + Math.round((loaded/total)*100) + "%...");
-		
-				},
-		
-			});
+			}, "Lade Spieldaten: ");
 		
 		});
 	
@@ -215,15 +208,19 @@ Q.Class.extend("Game", {
 		}
 	
 	},
+	getAudioHandler: function(){
 	
+		return this.audioHandler;
+	
+	},
 	getUIHandler: function(){
 	
 		return this.UIHandler;
 	
 	},
-	getAudioHandler: function(){
+	getLoadingHandler: function(){
 	
-		return this.audioHandler;
+		return this.loadingHandler;
 	
 	},
 	getMap: function(mapName){
