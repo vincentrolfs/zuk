@@ -152,6 +152,8 @@ Q.Class.extend("Map", {
 			// ----- Start map creation
 		
 			game.getLoadingHandler().load(p.assets, function(){
+			
+				var i, l;
 		
 				// Blackmap if no tmx file is provided!
 				if (!s.fileName){
@@ -172,14 +174,14 @@ Q.Class.extend("Map", {
 			
 					// ----- Start items inserting
 			
-					var i = 0,
-						items = p.items,
-						l = items.length;
+					var items = p.items;
 					
-					for ( ; i < l; i++ ){
+					l = items.length;
+					
+					for ( i = 0; i < l; i++ ){
 				
 						// Wenn erstens das Item nicht mit dem Spieler crasht, und zweitens das Item noch nicht gefunden wurde, tus rauf
-						if ( (items[i].x != player.p.x || items[i].y != player.p.y) && (!items[i].hasOwnProperty("found") || items[i].found == false))
+						if ( (items[i].x != player.p.x || items[i].y != player.p.y) && (!items[i].hasOwnProperty("found") || items[i].found === false))
 							stage.insert( new Q.Item( items[i], i, game ) );
 				
 					}
@@ -201,8 +203,7 @@ Q.Class.extend("Map", {
 				
 					}
 				
-					var i,
-						l = persons.length;
+					l = persons.length;
 				
 					// Go through persons, display them and put their instances in properties
 					for (i = 0; i < l; i++ ){
@@ -237,13 +238,13 @@ Q.Class.extend("Map", {
 				//  => Go through reachable maps and load their assets!
 			
 				var reachables = s.switchPoints.concat( s.loadAssetsOf ), // loadAssetsOf is just strings!
-					i = 0,
-					l = reachables.length,
 					loadArray = [],
 					mapName;
+										
+				l = reachables.length;
 		
 				// Go through reachable maps...
-				for ( ; i < l; i++){
+				for ( i = 0; i < l; i++ ){
 			
 					mapName = reachables[i];
 			
@@ -265,12 +266,12 @@ Q.Class.extend("Map", {
 		
 				// ----- End loading of nearby maps' data
 		
-			}, "Lade Map: ");
+			}, "Lade Map...");
 	
 		}, { // Options for scene
 		
 			// Sort things on stage (persons etc) by y-values (height)
-			sort: function(a,b) { return ((a.p && a.p.y) || -1) - ((b.p && b.p.y) || -1) }
+			sort: function(a,b) { return ((a.p && a.p.y) || -1) - ((b.p && b.p.y) || -1); }
 		
 		});
 	

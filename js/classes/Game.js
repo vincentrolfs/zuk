@@ -32,7 +32,7 @@ Q.Class.extend("Game", {
 		
 		this.UIHandler.loadAssets(function(){
 		
-			game.loadingHandler.load([MAIN_TILESET, INTERIOR_TILESET, IMAGEFILE_ITEM, IMAGEFILE_PERSON_MARKER, IMAGEFILE_ASSET_MARKER, "persons/max.png", "persons/jersey.png", "persons/robert.png", "persons/claire.png", SOUNDFILE_BUMP, SOUNDFILE_ITEM], function() {
+			game.loadingHandler.load([MAIN_TILESET, INTERIOR_TILESET, IMAGEFILE_ITEM, IMAGEFILE_PERSON_MARKER, IMAGEFILE_ASSET_MARKER, "persons/max.png", "persons/jersey.png", "persons/robert.png", "persons/claire.png", "persons/bob.png", "persons/chris.png", "persons/police.png", SOUNDFILE_BUMP, SOUNDFILE_ITEM], function() {
 	
 				console.log("Loaded most important assets succesfully.");
 	
@@ -42,7 +42,7 @@ Q.Class.extend("Game", {
 				Q.stageScene(game.startingMap, MAIN_LEVEL);
 				game.activeMapName = game.startingMap;
 
-			}, "Lade Spieldaten: ");
+			}, "Lade Spieldaten: " + PERCENTAGE_PLACEHOLDER + "%...");
 		
 		});
 	
@@ -69,7 +69,7 @@ Q.Class.extend("Game", {
 		if (error || !savegame || location.search === "?new"){
 	
 			this.startingMap = DEFAULT_MAP;
-			console.log("Could not load savegame: ", error, savegame);
+			console.log("Could not load savegame. Error: ", error, ". Savegame: ", savegame);
 	
 		} else {
 	
@@ -156,13 +156,13 @@ Q.Class.extend("Game", {
 					items: this.maps[mapName].p.items,
 					act: this.maps[mapName].p.act
 			
-				}
+				};
 		
 			}
 	
 		}
 	
-		saveObject["maps"] = mapData;
+		saveObject.maps = mapData;
 	
 		saveString = JSON.stringify(saveObject);
 		docCookies.setItem(SAVEGAME_COOKIENAME, saveString, Infinity);
@@ -334,9 +334,36 @@ Q.Class.extend("Game", {
 					spacingX: 16
 				}
 		);
+		
+		Q.sheet("bob",
+				"persons/bob.png",
+				{
+					tilew: 32,
+					tileh: 32,
+					spacingX: 16
+				}
+		);
 
 		Q.sheet("robert",
 				"persons/robert.png",
+				{
+					tilew: 32,
+					tileh: 32,
+					spacingX: 16
+				}
+		);
+		
+		Q.sheet("chris",
+				"persons/chris.png",
+				{
+					tilew: 32,
+					tileh: 32,
+					spacingX: 16
+				}
+		);
+		
+		Q.sheet("police",
+				"persons/police.png",
 				{
 					tilew: 32,
 					tileh: 32,

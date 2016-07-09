@@ -16,6 +16,8 @@ var MUSIC_COOKIENAME = "musicEnabled";
 var SOUND_COOKIENAME = "soundEnabled";
 var SAVEGAME_COOKIENAME = "savegame";
 
+var PERCENTAGE_PLACEHOLDER = "___percentage___";
+
 // What value to use when saving a boolean cookie, e.g. soundEnabled
 var COOKIE_TRUTHVALUE = "1";
 var COOKIE_FALSEVALUE = "0";

@@ -4,6 +4,9 @@ var zuk = new Q.Game(),
 	
 // todo
 // - bumping sound hack
-// - music doesn't work properly in safari
+// - display text umbruch is too hacky
 // - don't allow save when there is no player
+// - distinction freeze/setControl
+// - functionality: player can enter name
+// - when to use p
 // - used array.filter => browser support?

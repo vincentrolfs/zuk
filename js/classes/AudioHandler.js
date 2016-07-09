@@ -20,7 +20,7 @@ Q.Class.extend("AudioHandler", {
 	
 	setMusicEnabled: function(value){
 	
-		if (this.musicEnabled == !!value) return;
+		if (this.musicEnabled == value) return;
 	
 		this.musicEnabled = !!value;
 		this.handleMusicSettingChange();
@@ -56,8 +56,6 @@ Q.Class.extend("AudioHandler", {
 	
 	playSound: function(soundfile){
 	
-		console.log("called");
-
 		if (this.soundEnabled) Q.audio.play(soundfile);
 
 	}

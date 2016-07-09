@@ -51,7 +51,7 @@ Q.Sprite.extend("Item", {
 					
 			});
 			
-		}
+		};
 	
 	},
 	

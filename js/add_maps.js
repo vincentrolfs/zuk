@@ -1,3 +1,51 @@
+zuk.addMap({
+
+	mapName: "next_town",
+	fileName: "next_town.tmx",
+	music: "the-voices-in-the-dreams.mp3",
+	loadingPoints: {
+	
+		default: [360, 544, "up", true],
+		// Format: [x, y(, dir)(, isDoor)]
+	
+	},
+	switchPoints: [
+	
+		[360, 544, "pathway"],
+		[344, 544, "pathway"],
+		[376, 544, "pathway"],
+		
+		// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
+	
+	],
+	persons: [{
+	
+		x: 360,
+		y: 192,
+		direction: "down",
+		sheet: "police",
+		interact: function(callback){
+		
+			zuk_ui.displayText(["Zivilisten haben gerade keinen Zutritt.", "Mach doch eine Kaffeepause im Hotel!"]);
+		
+		}
+	
+	},{
+	
+		x: 424,
+		y: 400,
+		direction: "up",
+		sheet: "bob",
+		interact: function(callback){
+		
+			zuk_ui.displayText(["Oh, ein neues Gesicht!", "Du suchst Major Tom?", "Das große Gebäude da vorne ist von der Regierung.", "Ist nicht zu verfehlen!"]);
+		
+		}
+	
+	}]
+	
+});
+
 // Pathway
 zuk.addMap({
 
@@ -6,12 +54,15 @@ zuk.addMap({
 	loadingPoints: {
 	
 		default: [88, 368, "up", true],
+		town: [88, 368, "up", true],
+		next_town: [88, 32, "down", true],
 		// Format: [x, y(, dir)(, isDoor)]
 	
 	},
 	switchPoints: [
 	
-		[88, 368, "town"]
+		[88, 368, "town"],
+		[88, 32, "next_town"]
 		// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
 	
 	],
@@ -23,8 +74,10 @@ zuk.addMap({
 		
 			persons: [{
 			
-				x: 88,
-				y: 48,
+				x: 136,
+				y: 64,
+				sheet: "max",
+				walk: true,
 				direction: "down",
 				interact: function(callback){
 				
@@ -47,47 +100,6 @@ zuk.addMap({
 				}
 			
 			}]
-			/*{
-			
-				x: 88,
-				y: 304,
-				direction: "down",
-				interact: function(callback){
-				
-					if (zuk.getMap("pathway").p.act === "meet_tom"){
-		
-						zuk_ui.displayText(["Hey du!", "Komm her!"], function(){
-					
-							zuk.getPlayer().go(["up", "up"], function(){
-						
-								zuk_ui.displayText("Mein Name ist Major Tom.", callback);
-						
-							});
-					
-						});
-					
-					} else {
-					
-						zuk_ui.displayText("...", callback);
-					
-					}
-		
-				},
-			
-			}],
-			
-			organise: function(){
-			
-				zuk.getPlayer().setControl(false);
-				
-				....p.interact(function(){
-					
-					zuk.getPlayer().setControl(true);
-					zuk.getMap("pathway").p.act = "exploring";
-					
-				});
-			
-			}*/
 		
 		}
 	
@@ -169,6 +181,8 @@ zuk.addMap({
 	
 		[88, 224, "players_room"],
 		[200, 96, "pathway"],
+		[184, 96, "pathway"],
+		[216, 96, "pathway"],
 		[104, 368, "cave"],
 		[216, 224, "jerseys_room"],
 		[280, 224, "blue_room"]
@@ -176,7 +190,7 @@ zuk.addMap({
 	
 	],
 	music: "come-on-in-to-post-town.mp3",
-	items: [{ x: 136, y: 96, no: 1 }],
+	items: [],
 	invisibles: [
 	
 		/*{
@@ -353,7 +367,7 @@ zuk.addMap({
 		// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
 	
 	],
-	items:[{ no: 1, x: 56, y: 176 }],
+	items:[{ no: 2, x: 56, y: 176 }],
 	music: "icy-sanctum.mp3",
 	firstAct: "exploring",
 	acts: {
@@ -363,7 +377,7 @@ zuk.addMap({
 			persons: [{ 
 			
 				x: 168, y: 80,
-				sheet: "claire",
+				sheet: "bob",
 				direction: "right"
 				
 			}, { 
@@ -388,7 +402,7 @@ zuk.addMap({
 			},{ 
 			
 				x: 232, y: 80,
-				sheet: "max",
+				sheet: "chris",
 				direction: "left"
 				
 			}],

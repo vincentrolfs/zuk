@@ -74,27 +74,27 @@ Q.component("smartControls", {
 		p.diffX = 0;
 		p.diffY = 0;
 		
-		var go_array_empty = (p.go_array.length == 0);
+		var go_array_empty = (p.go_array.length === 0);
 		
-		if (go_array_empty && p.userControlledStepping && Q.inputs['up'] || p.go_array[0] == 'up') {
+		if (go_array_empty && p.userControlledStepping && Q.inputs.up || p.go_array[0] == 'up') {
 		
 			p.diffY = -p.stepDistance;
 			p.direction = "up";
 			if (!go_array_empty) p.go_array.splice(0, 1);
 		
-		} else if (go_array_empty && p.userControlledStepping && Q.inputs['down'] || p.go_array[0] == 'down') {
+		} else if (go_array_empty && p.userControlledStepping && Q.inputs.down || p.go_array[0] == 'down') {
 		
 			p.diffY = p.stepDistance;
 			p.direction = "down";
 			if (!go_array_empty) p.go_array.splice(0, 1);
 		
-		} else if (go_array_empty && p.userControlledStepping && Q.inputs['left'] || p.go_array[0] == 'left') {
+		} else if (go_array_empty && p.userControlledStepping && Q.inputs.left || p.go_array[0] == 'left') {
 		
 			p.diffX = -p.stepDistance;
 			p.direction = "left";
 			if (!go_array_empty) p.go_array.splice(0, 1);
 		
-		} else if (go_array_empty && p.userControlledStepping && Q.inputs['right'] || p.go_array[0] == 'right') {
+		} else if (go_array_empty && p.userControlledStepping && Q.inputs.right || p.go_array[0] == 'right') {
 		
 			p.diffX = p.stepDistance;
 			p.direction = "right";
@@ -153,8 +153,6 @@ Q.component("playerFunctions", {
 	},
 	
 	bumpSound: function(collision){
-	
-		console.log("bumpSound");
 		
 		var obj = collision.obj;
 		
@@ -239,18 +237,9 @@ Q.component("playerFunctions", {
 			game = this.entity.game;
 		
 		// Check if player has moved since he arrived on the map
-		if (
-		
-			(!p.hasMoved) // Peform check only if he hasMoved isn't already true 
-			
-			&&
-			
-			(
-				// If player is on another location than he was when he came...
-				(p.startingX != p.x) || (p.startingY != p.y)
-			)
-		
-		){
+		// Peform check only if he hasMoved isn't already true 
+		// If player is on another location than he was when he came...
+		if ( !p.hasMoved && ( (p.startingX != p.x) || (p.startingY != p.y) ) ){
 		
 			// ...we can say that he must have moved
 			p.hasMoved = true;

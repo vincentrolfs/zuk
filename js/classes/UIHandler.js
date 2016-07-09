@@ -58,49 +58,59 @@ Q.Class.extend("UIHandler", {
 	
 	},
 	
+	stringToArray(text){
+	
+		var lines = text.split("\n"),
+			textArray = [],
+			l = lines.length;
+	
+		for ( var i = 0; i < l; i++ ){
+	
+			var line = lines[i],
+				words = line.split(" "),
+				word,
+				sentence = "",
+				words_length = words.length;
+				
+			for (var j = 0; j < words_length; j++){
+		
+				word = words[j].trim();
+				
+				if (word === ""){
+				
+					continue;
+					
+				}
+			
+				if (sentence.length + words_length < 66){
+				
+					sentence += " " + word;
+					
+				} else {
+			
+					textArray.push(sentence.trim());
+					sentence = word;
+			
+				}
+		
+			}
+		
+			textArray.push(sentence.trim());
+	
+		}
+		
+		return textArray;
+	
+	},
+	
 	displayText: function(textArray, callback, autoChange){
 
 		var UIHandler = this;
 		UIHandler.busy = true;
 	
-		if (autoChange && typeof autoChange != "number") autoChange = DEFAULT_TEXT_SPEED;
+		if (autoChange && typeof autoChange !== "number") autoChange = DEFAULT_TEXT_SPEED;
 	
-		// String in Array umwandeln, sodass automatisch umgebrochen wird
-		if (typeof textArray === "string"){
-		
-			var rawTextArray = textArray.split("\n");
-			textArray = [];
-		
-			for (var i in rawTextArray){
-		
-				var line = rawTextArray[i];
-		
-				var words = line.split(" "),
-					sentence = "",
-					j = 0,
-					words_l = words.length;
-				
-				while (j < words.length){
-			
-					var word = words[j];
-				
-					if (sentence.length + word.length < 56) sentence += " " + word;
-					else {
-				
-						textArray.push(sentence.trim());
-						sentence = word;
-				
-					}
-				
-					j++;
-			
-				}
-			
-				textArray.push(sentence.trim());
-		
-			}
-	
-		}
+		if (typeof textArray == "string") textArray = UIHandler.stringToArray(textArray);
 	
 		UIHandler.game.setGlobalFreeze(true);
 	
@@ -277,7 +287,7 @@ Q.Class.extend("UIHandler", {
 			UIHandler.applyLoadedAssets();
 			if (typeof callback == "function") callback();
 		
-		}, "Lade Oberfläche: ");
+		}, "Lade Oberfläche: " + PERCENTAGE_PLACEHOLDER + "%...");
 	
 	},
 	
@@ -310,7 +320,7 @@ Q.Class.extend("UIHandler", {
 	 
 			 Q.el.focus();
 	
-		}
+		};
 		
 		soundCheckbox.onclick = function(){
 	
@@ -320,7 +330,7 @@ Q.Class.extend("UIHandler", {
 	 
 			 Q.el.focus();
 	
-		}
+		};
 	
 	},
 	

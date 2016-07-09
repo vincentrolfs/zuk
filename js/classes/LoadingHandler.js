@@ -6,25 +6,35 @@ Q.Class.extend("LoadingHandler", {
 	
 	},
 	
-	load: function(loadArray, callback, preText, postText){
+	displayLoadingText: function(text, loaded, total){
 	
-		console.log(loadArray);
+		var textWithPercentage = text.replace(PERCENTAGE_PLACEHOLDER, Math.round((loaded/total)*100));
+
+		this.UIHandler.displayLoadingText(textWithPercentage);
 	
-		var UIHandler = this.UIHandler;
+	},
+	
+	load: function(loadArray, callback, text){
+	
+		console.log("Loading: ", loadArray);
+	
+		var loadingHandler = this,
+			UIHandler = this.UIHandler;
 		
-		if (typeof preText == "undefined") preText = "Lade ";
-		if (typeof postText == "undefined") postText = "%...";
+		if (typeof text === "undefined") text = "Lade "+ PERCENTAGE_PLACEHOLDER+"%...";
+		
+		loadingHandler.displayLoadingText(text, 0, loadArray.length);
 	
 		Q.load(loadArray, function() {
 		
 			UIHandler.hideLoadingText();
-			if (typeof callback == "function") callback();
+			if (typeof callback === "function") callback();
 
 		}, {
 	
 			progressCallback: function(loaded, total){
-	
-				UIHandler.displayLoadingText(preText + Math.round((loaded/total)*100) + postText);
+			
+				loadingHandler.displayLoadingText(text, loaded, total);
 	
 			},
 	

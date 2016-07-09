@@ -72,8 +72,6 @@ Q.Sprite.extend("Person", {
 		// Enables dynamic on/off switching of walking
 		if (p.walk && !p.freeze){
 		
-			var p = this.p;
-		
 			p.timeSinceWalk += dt;
 			
 			var dirs = [];
