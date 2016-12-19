@@ -193,19 +193,23 @@ Quintus.TMX = function(Q) {
      }
    }
 
-   var tileLayerProperties = Q._extend({
-     tileW: Q.sheet(sheetName).tileW,
-     tileH: Q.sheet(sheetName).tileH,
-     sheet: sheetName,
-     tiles: data
-     },parseProperties(layer));
+   if (sheetName){
+   
+	   var tileLayerProperties = Q._extend({
+		 tileW: Q.sheet(sheetName).tileW,
+		 tileH: Q.sheet(sheetName).tileH,
+		 sheet: sheetName,
+		 tiles: data
+		 }, parseProperties(layer));
 
-   var TileLayerClass = tileLayerProperties.Class || 'TileLayer';
+	   var TileLayerClass = tileLayerProperties.Class || 'TileLayer';
 
-   if(tileLayerProperties['collision']) {
-     stage.collisionLayer(new Q[TileLayerClass](tileLayerProperties));
-   } else {
-     stage.insert(new Q[TileLayerClass](tileLayerProperties));
+	   if(tileLayerProperties['collision']) {
+		 stage.collisionLayer(new Q[TileLayerClass](tileLayerProperties));
+	   } else {
+		 stage.insert(new Q[TileLayerClass](tileLayerProperties));
+	   }
+   
    }
  };
 

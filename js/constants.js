@@ -53,3 +53,5 @@ var SOUND_ENABLED_DEFAULT = true;
 
 var TEXT_FAMILY = "aller";
 var TEXT_SIZE = 26;
+
+var LOAD_ON_STARTUP = [MAIN_TILESET, INTERIOR_TILESET, IMAGEFILE_ITEM, IMAGEFILE_PERSON_MARKER, IMAGEFILE_ASSET_MARKER, "persons/max.png", "persons/jersey.png", "persons/robert.png", "persons/claire.png", "persons/bob.png", "persons/chris.png", "persons/police.png", SOUNDFILE_BUMP, SOUNDFILE_ITEM];

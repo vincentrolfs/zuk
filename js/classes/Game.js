@@ -32,7 +32,7 @@ Q.Class.extend("Game", {
 		
 		this.UIHandler.loadAssets(function(){
 		
-			game.loadingHandler.load([MAIN_TILESET, INTERIOR_TILESET, IMAGEFILE_ITEM, IMAGEFILE_PERSON_MARKER, IMAGEFILE_ASSET_MARKER, "persons/max.png", "persons/jersey.png", "persons/robert.png", "persons/claire.png", "persons/bob.png", "persons/chris.png", "persons/police.png", SOUNDFILE_BUMP, SOUNDFILE_ITEM], function() {
+			game.loadingHandler.load(LOAD_ON_STARTUP, function() {
 	
 				console.log("Loaded most important assets succesfully.");
 	
@@ -73,36 +73,41 @@ Q.Class.extend("Game", {
 	
 		} else {
 	
-			this.savegame = savegame;
-			this.startingMap = savegame.player.map;
-		
-			// Load map data
-		
-			var savedMaps = savegame.maps;
-		
-			for (var mapName in savedMaps){
-		
-				if (savedMaps.hasOwnProperty(mapName) && this.maps.hasOwnProperty(mapName)){
-		
-					this.maps[mapName].p.act = savedMaps[mapName].act;
-					this.loadItems(mapName);
-			
-				}
-		
-			}
-		
-			this.playerState = savegame.playerState;
-		
-			console.log("Loaded savegame successfully: ", savegame);
+			this.applySavegame(savegame);
 	
 		}
 
 	},
+	
+	applySavegame: function(savegame){
+	
+		this.savegame = savegame;
+		this.startingMap = savegame.player.map;
+	
+		var savedMaps = savegame.maps;
+	
+		for (var mapName in savedMaps){
+	
+			if (savedMaps.hasOwnProperty(mapName) && this.maps.hasOwnProperty(mapName)){
+	
+				this.maps[mapName].p.act = savedMaps[mapName].act;
+				this.loadItems(mapName);
+		
+			}
+	
+		}
+	
+		this.playerState = savegame.playerState;
+	
+		console.log("Loaded savegame successfully: ", savegame);
+	
+	},
+	
 	loadItems: function(map){
 
 		var savedMaps = this.savegame.maps;
 	
-		if (typeof savedMaps[map].items != "object" || !savedMaps[map].items.length) return;
+		if (typeof savedMaps[map].items !== "object" || !savedMaps[map].items.length) return;
 	
 		var savedItems = savedMaps[map].items,
 			realItems = this.maps[map].p.items,

@@ -1,5 +1,27 @@
 zuk.addMap({
 
+	mapName: "hotel",
+	fileName: "hotel.tmx",
+	music: "the-voices-in-the-dreams.mp3",
+	loadingPoints: {
+	
+		default: [136, 256, "up", true],
+		// Format: [x, y(, dir)(, isDoor)]
+	
+	},
+	switchPoints: [
+		
+		[136, 256, "next_town"],
+		// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
+	
+	],
+	invisibles: [],
+	persons: []
+	
+});
+
+zuk.addMap({
+
 	mapName: "next_town",
 	fileName: "next_town.tmx",
 	music: "the-voices-in-the-dreams.mp3",
@@ -14,10 +36,21 @@ zuk.addMap({
 		[360, 544, "pathway"],
 		[344, 544, "pathway"],
 		[376, 544, "pathway"],
+		[584, 272, "hotel"]
 		
 		// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
 	
 	],
+	invisibles: [{
+		x: 328,
+		y: 176,
+		interact: function(){
+		
+			zuk_ui.displayText("Rathaus der Stadt");
+		
+		}
+	
+	}],
 	persons: [{
 	
 		x: 360,
@@ -114,7 +147,7 @@ zuk.addMap({
 	fileName: "blue_room.tmx",
 	loadingPoints: {
 	
-		default: [200, 208, "up", true],
+		default: [216, 208, "up", true],
 		town: [216, 208, "up", true]
 		// Format: [x, y(, dir)(, isDoor)]
 	
@@ -193,14 +226,14 @@ zuk.addMap({
 	items: [],
 	invisibles: [
 	
-		/*{
+		{
 			x: 40, y: 144,
 			interact: function(){
 		
-				zuk_ui.displayText(["Da wurde etwas in den Baum geritzt!", '"Game Development by Vincent"', "Wer das wohl ist?"]);
+				zuk_ui.displayText(["Da wurde etwas in den Baum geritzt!", '"Spiel entwickelt von Vincent Rolfs"', "Wer das wohl ist?"]);
 		
 			}	
-		},*/
+		},
 		
 		{
 			x: 264, y: 368,

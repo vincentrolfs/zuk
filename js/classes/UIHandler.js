@@ -45,8 +45,6 @@ Q.Class.extend("UIHandler", {
 	
 	displayLoadingText: function(text){
 	
-		console.log("Loading text: ", text);
-	
 		this.loadStatus.p.hidden = false;
 		this.loadStatus.p.label = text;
 	

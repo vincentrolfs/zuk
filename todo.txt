@@ -1,0 +1,11 @@
+todo
+- bumping sound hack
+- display text umbruch is too hacky
+- don't allow save when there is no player
+- distinction freeze/setControl
+- functionality: player can enter name
+- when to use p
+- used array.filter => browser support?
+- wenn eine map gerade pre-loaded und man sie dann betritt, bleibt der bildschirm schwarz
+- rätsel: http://www.raetselstunde.de/text-raetsel/vers-raetsel/vers-raetsel-003.html
+	z.b: Wenn ich in der Mitte steh, rechts ein e und links ein e, rage ich als stolzer Baum hoch empor in des Waldes Raum.

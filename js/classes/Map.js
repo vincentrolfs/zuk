@@ -5,7 +5,6 @@ Q.Class.extend("Map", {
 		this.game = game;
 		
 		// Map settings provided when called
-		// This here should adhere documentation
 		var s = this.settings = Q._extend({
 			
 			mapName: "",
@@ -22,9 +21,13 @@ Q.Class.extend("Map", {
 			firstAct: "",
 			acts: [],
 			
+			initialFlags: [],
+			
 			loadAssetsOf: []
 			
 		}, settings);
+		
+		this.flags = s.initialFlags;
 		
 		// Map properties
 		// Accesible by others
@@ -49,105 +52,17 @@ Q.Class.extend("Map", {
 	createScene: function(){
 	
 		var game = this.game,
+			map = this,
 			s = this.settings,
 			p = this.p;
 	
 		// Create scene with proper name
 		Q.scene(s.mapName, function(stage) {
 		
-			// stage contains the actual visible stuff, thus you can do stage.insert
-		
-			p.visited = true;
-		
 			var currentAct = p.act,
-				player = game.getPlayer(),
-				savegame = game.getSavegame(),
-				comingFrom,
-				oldDirection,
-				loadX,
-				loadY,
-				direction,
-				isDoor;
-		
-			// ----- Start player config
-		
-			if (player){
-		
-				comingFrom = player.getMap();
-				oldDirection = player.getDirection();
+				player = map.configuratePlayer();
 				
-				// If the location where player comes from doesn't have it's own loading point
-				if (typeof s.loadingPoints[comingFrom] == "undefined"){
-				
-					// Use default loading point
-					comingFrom = "default";
-				
-				}
-			
-			} else { // Player does not exist yet => Game has just started
-		
-				isDoor = false;
-		
-				if (savegame){ // New game with savegame => load data
-		
-					loadX = savegame.player.x;
-					loadY = savegame.player.y;
-				
-					direction = savegame.player.direction;
-			
-				} else { // No savegame... just use default stuff
-			
-					comingFrom = "default";
-			
-				}
-			
-			}
-		
-			if (typeof loadX == "undefined") 		loadX = s.loadingPoints[comingFrom][0];
-			if (typeof loadY == "undefined") 		loadY = s.loadingPoints[comingFrom][1];
-	
-			if (typeof direction == "undefined") 	direction = s.loadingPoints[comingFrom][2] || oldDirection || "down";
-			if (typeof isDoor == "undefined") 		isDoor = s.loadingPoints[comingFrom][3];
-		
-			// Make changes to the player instance
-			var playerConfig = {
-		
-				hasMoved: false,
-		
-				x: loadX,
-				y: loadY,
-			
-				startingX: loadX,
-				startingY: loadY,
-			
-				direction: 	direction,
-			
-				mapName: s.mapName
-		
-			};
-		
-			game.resetPlayer();
-			player = game.getPlayer();
-			
-			player.set(playerConfig);
-
-			if (isDoor) player.go(direction);
-		
-			// ----- End player config
-		
-			// ----- Start organising act function
-		
-			function organiseAct(){
-		
-				if (s.acts[currentAct] && (typeof s.acts[currentAct].organise === "function")){
-				
-					s.acts[currentAct].organise();
-				
-				}
-			
-			}
-		
-			// ----- End organising act function
+			p.visited = true;
 		
 			// ----- Start map creation
 		
@@ -160,7 +75,7 @@ Q.Class.extend("Map", {
 			
 					Q.stageScene(SCENE_BLACKMAP, MAIN_LEVEL);
 			
-					organiseAct();
+					map.organiseCurrentAct();
 			
 				} else {
 		
@@ -225,7 +140,7 @@ Q.Class.extend("Map", {
 			
 					// ----- End persons, invisibles inserting
 				
-					organiseAct();
+					map.organiseCurrentAct();
 			
 				}
 		
@@ -239,7 +154,8 @@ Q.Class.extend("Map", {
 			
 				var reachables = s.switchPoints.concat( s.loadAssetsOf ), // loadAssetsOf is just strings!
 					loadArray = [],
-					mapName;
+					mapName,
+					reachableMap;
 										
 				l = reachables.length;
 		
@@ -252,17 +168,19 @@ Q.Class.extend("Map", {
 					// but reachables might also contain plain strings, so we have to differentiate
 					if (typeof mapName !== "string") mapName = mapName[2];
 			
+					reachableMap = game.getMap(mapName);
+			
 					// If map has not been visited yet
-					if ( !p.visited ){
+					if ( !reachableMap.p.visited ){
 			
 						// Preload it's assets
-						loadArray = loadArray.concat( p.assets );
+						loadArray = loadArray.concat( reachableMap.p.assets );
 				
 					}
 			
 				}
-		
-				Q.load(loadArray);
+				
+				game.getLoadingHandler().load(loadArray, null, "");
 		
 				// ----- End loading of nearby maps' data
 		
@@ -274,6 +192,96 @@ Q.Class.extend("Map", {
 			sort: function(a,b) { return ((a.p && a.p.y) || -1) - ((b.p && b.p.y) || -1); }
 		
 		});
+	
+	},
+	
+	configuratePlayer: function(){
+	
+		var player = this.game.getPlayer(),
+			settings = this.settings,
+			savegame = this.game.getSavegame(),
+			comingFrom,
+			oldDirection,
+			direction,
+			loadingPointIsDoor,
+			loadX, loadY;
+	
+		if (player){
+	
+			comingFrom = player.getMap();
+			oldDirection = player.getDirection();
+			
+			// If the location where player comes from doesn't have it's own loading point
+			if (typeof settings.loadingPoints[comingFrom] === "undefined"){
+			
+				// Use default loading point
+				comingFrom = "default";
+			
+			}
+		
+		} else { // Player does not exist yet => Game has just started
+	
+			loadingPointIsDoor = false;
+	
+			if (savegame){ // New game with savegame => load data
+	
+				loadX = savegame.player.x;
+				loadY = savegame.player.y;
+			
+				direction = savegame.player.direction;
+		
+			} else { // No savegame... just use default stuff
+		
+				comingFrom = "default";
+		
+			}
+		
+		}
+	
+		if (typeof loadX == "undefined")				loadX = settings.loadingPoints[comingFrom][0];
+		if (typeof loadY == "undefined")				loadY = settings.loadingPoints[comingFrom][1];
+
+		if (typeof direction == "undefined")			direction = settings.loadingPoints[comingFrom][2] || oldDirection || "down";
+		if (typeof loadingPointIsDoor == "undefined")	loadingPointIsDoor = settings.loadingPoints[comingFrom][3];
+	
+		// Make changes to the player instance
+		var playerConfig = {
+	
+			hasMoved: false,
+	
+			x: loadX,
+			y: loadY,
+		
+			startingX: loadX,
+			startingY: loadY,
+		
+			direction: 	direction,
+		
+			mapName: settings.mapName
+	
+		};
+	
+		this.game.resetPlayer();
+		player = this.game.getPlayer();
+		
+		player.set(playerConfig);
+
+		if (loadingPointIsDoor) player.go(direction);
+		
+		return player;
+	
+	},
+	
+	organiseCurrentAct: function(){
+	
+		var currentAct = this.p.act;
+			settings = this.settings;
+
+		if (settings.acts[currentAct] && (typeof settings.acts[currentAct].organise === "function")){
+		
+			settings.acts[currentAct].organise();
+		
+		}
 	
 	}
 	
