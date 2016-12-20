@@ -129,8 +129,6 @@ Q.Class.extend("UIHandler", {
 			
 				UIHandler.textContainer.p.hidden = true;
 			
-				if (typeof callback == "function") callback();
-			
 				if (autoChange){
 
 					window.clearInterval(timeoutInterval);
@@ -141,6 +139,8 @@ Q.Class.extend("UIHandler", {
 					Q.input.off("action", this);
 
 				}
+				
+				if (typeof callback == "function") callback();
 			
 			} else {
 	

@@ -7,4 +7,4 @@ todo
 - when to use p
 - used array.filter => browser support?
 - rätsel: http://www.raetselstunde.de/text-raetsel/vers-raetsel/vers-raetsel-003.html
-	z.b: Wenn ich in der Mitte steh, rechts ein e und links ein e, rage ich als stolzer Baum hoch empor in des Waldes Raum.
+- flags instead of acts?

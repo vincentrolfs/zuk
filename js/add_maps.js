@@ -15,8 +15,46 @@ zuk.addMap({
 		// Format: [x_on_current_map, y_on_current_map, name_of_new_map]
 	
 	],
-	invisibles: [],
-	persons: []
+	invisibles: [{
+		x: 40,
+		y: 80,
+		interact: function(){
+			zuk_ui.displayText("Wir wünschen Ihnen einen angenehmen Aufenthalt!");
+		}
+	}],
+	persons: [{
+		x: 40,
+		y: 48,
+		sheet: "claire"
+	},
+	{
+		x: 216,
+		y: 48,
+		sheet: "police",
+		interact: function(){
+			zuk_ui.displayText("Kein Zimmer? Kein Zutritt!");
+		},
+	},
+	{
+		x: 200,
+		y: 48,
+		sheet: "police",
+		interact: function(){
+			zuk_ui.displayText(["Hier dürfen leider nur Gäste passieren.", "Wir bitten um Ihr Verständnis."]);
+		}
+	},
+	{
+		x: 88,
+		y: 176,
+		sheet: "max",
+		interact: function(){
+			zuk_ui.displayText(["Ich bin der Rätselmeister.", "Mir ist zu Ohren gekommen,",  "dass du ins Regierungsgebäude willst.", "Dabei kann ich dir helfen!", "Aber vorher musst du mein Rätsel lösen!", "Wenn ich in der Mitte steh,", "Rechts ein e und links ein e," ,"Rage ich als stolzer Baum,", "Hoch empor in Waldes Raum.", "Was bin ich?"], function(){
+				var answer = prompt().replace(/\s+/g, "").toLowerCase();
+				var response = (answer === atob("ZWljaGU="))? "Das ist korrekt!" : "Nein, leider nicht...";
+				zuk_ui.displayText(response);
+			});
+		}
+	}]
 	
 });
 
@@ -28,6 +66,7 @@ zuk.addMap({
 	loadingPoints: {
 	
 		default: [360, 544, "up", true],
+		hotel: [584, 272, "down", true]
 		// Format: [x, y(, dir)(, isDoor)]
 	
 	},

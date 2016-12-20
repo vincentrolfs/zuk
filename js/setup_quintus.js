@@ -12,6 +12,7 @@ Q.input.keyboardControls({
 	X: "action",
 	Z: "action",
 	SPACE: "action",
+	ENTER: "action",
 	81: "action", 	// "Q"
 	69: "action", 	// "E"
 	87: "up",		// "W"
