@@ -1,6 +1,6 @@
 (function(){
 
-	Q.debug = 0;
+	Q.debug = 1;
 	
 	inDevMode = false;
 	
