@@ -1801,6 +1801,11 @@ var Quintus = exportTarget[key] = function(opts) {
   Q.asset = function(name) {
     return Q.assets[name];
   };
+  
+  /// If a big file is ordered to be loaded, and then again, while the first loading isn't done, it used to be downloaded again.
+  // This isn't optimal. Instead, we know remember what is currently loading and when the same assets wants to be loaded again, it will be put on a waiting list
+  // This contains arrays [loadedCallback, errorCallback]. The corresponding callbacks will be called when the asset has loaded.
+  Q.currentlyLoading = {};
 
   /**
    Load assets, and call our callback when done.
@@ -1869,12 +1874,21 @@ var Quintus = exportTarget[key] = function(opts) {
     var loadedCallback = function(key,obj,force) {
     
       if(errors) { return; }
-
-      // Prevent double callbacks (I'm looking at you Firefox, canplaythrough
-      if(!Q.assets[key]||force) {
-
-        /* Add the object to our asset list */
+	  // Prevent double callbacks (I'm looking at you Firefox, canplaythrough)
+	  if(!Q.assets[key]||force) {
+	  
+	    /* Add the object to our asset list */
         Q.assets[key] = obj;
+	  
+	    // Notify waiting things that loading is done if necessary
+	  	if (typeof Q.currentlyLoading[key] !== "undefined"){
+			var waiters = Q.currentlyLoading[key],
+				l = waiters.length;
+			delete Q.currentlyLoading[key];
+			for (var i = 0; i < l; i++){
+				waiters[i][0](key,Q.assets[key],true);
+			}
+        }
 
         /* We've got one less asset to load */
         assetsRemaining--;
@@ -1902,15 +1916,27 @@ var Quintus = exportTarget[key] = function(opts) {
 
       /* If we already have the asset loaded, */
       /* don't load it again */
-      if(Q.assets[key]) {
+      if (Q.assets[key]) {
         loadedCallback(key,Q.assets[key],true);
+      } else if (Q.currentlyLoading.hasOwnProperty(key)) {
+      	Q.currentlyLoading[key].push([loadedCallback, errorCallback]);
       } else {
         /* Call the appropriate loader function */
         /* passing in our per-asset callback */
         /* Dropping our asset by name into Q.assets */
-        Q["loadAsset" + assetType](key,itm,
-                                   loadedCallback,
-                                   function() { errorCallback(itm); });
+        Q.currentlyLoading[key] = [];
+        Q["loadAsset" + assetType](key,itm,loadedCallback, function() {
+
+			// Notify waiting things that loading failed
+			var waiters = Q.currentlyLoading[key],
+				l = waiters.length;
+			for (var i = 0; i < l; i++){
+				waiters[i][1](itm);
+			}
+			delete Q.currentlyLoading[key];
+			errorCallback(itm);
+
+        });
       }
     });
 

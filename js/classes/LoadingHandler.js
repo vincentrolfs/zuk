@@ -3,6 +3,7 @@ Q.Class.extend("LoadingHandler", {
 	init: function(UIHandler){
 	
 		this.UIHandler = UIHandler;
+		this.doneLoading = [];
 	
 	},
 	
@@ -17,35 +18,57 @@ Q.Class.extend("LoadingHandler", {
 	
 	},
 	
-	load: function(loadArray, callback, text){
+	removeDuplicates: function(arr){
+		var seen = {};
+		return arr.filter(function(item) {
+			return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+		});
+	},
 	
+	load: function(loadArray, callback, text){
+		
+		if (typeof loadArray === "undefined"){ console.warn("Can't load undefined."); return; }
+		
+		loadArray = this.removeDuplicates(loadArray);
 		console.log("Loading: ", loadArray);
 		
-		if (typeof loadArray === "undefined" || !loadArray.length) return;
-	
-		var loadingHandler = this,
-			UIHandler = this.UIHandler;
-		
-		if (typeof text === "undefined") text = "Lade "+ PERCENTAGE_PLACEHOLDER + "%...";
-		
-		loadingHandler.displayLoadingText(text, 0, loadArray.length);
-	
-		Q.load(loadArray, function() {
-		
-			UIHandler.hideLoadingText();
-			console.log("Loaded succesfully: ", loadArray);
-			if (typeof callback === "function") callback();
-
-		}, {
-	
-			progressCallback: function(loaded, total){
+		if (!loadArray.length){
 			
-				loadingHandler.displayLoadingText(text, loaded, total);
+			this.loadSuccess(loadArray, callback);
+		
+		} else {
+		
+			var loadingHandler = this,
+				UIHandler = this.UIHandler;
+			
+			if (typeof text === "undefined") text = "";
+		
+			loadingHandler.displayLoadingText(text, 0, loadArray.length);
 	
-			},
-	
-		});
+			Q.load(loadArray, function() {
+		
+				UIHandler.hideLoadingText();
+				loadingHandler.loadSuccess(loadArray, callback);
+			
+			}, {
+		
+				progressCallback: function(loaded, total){
+				
+					loadingHandler.displayLoadingText(text, loaded, total);
+			
+				},
+		
+			});
+		
+		}
 	
 	},
+	
+	loadSuccess: function(loadArray, callback){
+	
+		console.log("Loaded succesfully: ", loadArray);
+		if (typeof callback === "function") callback();
+	
+	}
 
 });

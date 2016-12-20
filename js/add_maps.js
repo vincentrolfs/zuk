@@ -42,6 +42,7 @@ zuk.addMap({
 	
 	],
 	invisibles: [{
+	
 		x: 328,
 		y: 176,
 		interact: function(){
@@ -49,7 +50,7 @@ zuk.addMap({
 			zuk_ui.displayText("Rathaus der Stadt");
 		
 		}
-	
+		
 	}],
 	persons: [{
 	
