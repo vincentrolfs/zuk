@@ -9,5 +9,3 @@ todo
 - wenn eine map gerade pre-loaded und man sie dann betritt, bleibt der bildschirm schwarz
 - rätsel: http://www.raetselstunde.de/text-raetsel/vers-raetsel/vers-raetsel-003.html
 	z.b: Wenn ich in der Mitte steh, rechts ein e und links ein e, rage ich als stolzer Baum hoch empor in des Waldes Raum.
-- bei next_town kann man die obere linke ecke nicht betreten
-	- see git changelog to find out why
